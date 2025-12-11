@@ -1,8 +1,8 @@
-package br.gov.agu.pace.core.domain.setor;
+package br.gov.agu.pace.domain.unidade;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SetorRepository extends JpaRepository<SetorEntity, Long> {
+public interface UnidadeRepository extends JpaRepository<UnidadeEntity, Long> {
 }

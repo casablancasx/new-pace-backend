@@ -1,4 +1,4 @@
-package br.gov.agu.pace.config;
+package br.gov.agu.pace.commons.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

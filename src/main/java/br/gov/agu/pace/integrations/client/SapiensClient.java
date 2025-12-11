@@ -1,8 +1,8 @@
-package br.gov.agu.pace.client;
+package br.gov.agu.pace.integrations.client;
 
 import br.gov.agu.pace.auth.dtos.LoginRequestDTO;
-import br.gov.agu.pace.auth.dtos.LoginSapiensApiResponse;
-import br.gov.agu.pace.auth.dtos.SetorDTO;
+import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
+import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

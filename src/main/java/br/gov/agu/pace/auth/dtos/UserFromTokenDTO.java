@@ -7,16 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginSapiensApiResponse {
-
-    private Long exp;
-
-    private boolean passwordExpired;
-
-    private Long timestamp;
-
+public class UserFromTokenDTO {
+    private Long sapiensId;
+    private String nome;
+    private String email;
+    private Long setorId;
     private String token;
-
-    private String version;
-
 }

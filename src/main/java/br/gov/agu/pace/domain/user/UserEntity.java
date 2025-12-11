@@ -1,6 +1,6 @@
-package br.gov.agu.pace.core.domain.user;
+package br.gov.agu.pace.domain.user;
 
-import br.gov.agu.pace.core.domain.enums.UserRole;
+import br.gov.agu.pace.domain.enums.UserRole;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;

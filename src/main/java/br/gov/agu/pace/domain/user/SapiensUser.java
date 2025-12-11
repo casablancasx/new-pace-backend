@@ -1,7 +1,7 @@
-package br.gov.agu.pace.core.domain.user;
+package br.gov.agu.pace.domain.user;
 
-import br.gov.agu.pace.core.domain.setor.SetorEntity;
-import br.gov.agu.pace.core.domain.unidade.UnidadeEntity;
+import br.gov.agu.pace.domain.setor.SetorEntity;
+import br.gov.agu.pace.domain.unidade.UnidadeEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 

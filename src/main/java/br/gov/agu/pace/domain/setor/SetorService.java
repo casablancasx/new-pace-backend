@@ -1,7 +1,6 @@
-package br.gov.agu.pace.core.domain.setor;
+package br.gov.agu.pace.domain.setor;
 
-import br.gov.agu.pace.auth.dtos.SetorDTO;
-import br.gov.agu.pace.client.SapiensClient;
+import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

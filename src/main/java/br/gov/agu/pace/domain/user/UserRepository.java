@@ -1,4 +1,4 @@
-package br.gov.agu.pace.core.domain.user;
+package br.gov.agu.pace.domain.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

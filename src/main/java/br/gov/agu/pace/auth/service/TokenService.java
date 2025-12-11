@@ -1,6 +1,6 @@
 package br.gov.agu.pace.auth.service;
 
-import br.gov.agu.pace.auth.dtos.UserDTO;
+import br.gov.agu.pace.auth.dtos.UserFromTokenDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Service;
@@ -11,13 +11,14 @@ import java.util.List;
 public class TokenService {
 
 
-    public UserDTO getUserFromToken(String token) {
+    public UserFromTokenDTO getUserFromToken(String token) {
         DecodedJWT jwt = JWT.decode(token);
-        return new UserDTO(
+        return new UserFromTokenDTO(
                 jwt.getClaim("id").asLong(),
                 jwt.getClaim("nome").asString(),
                 jwt.getClaim("email").asString(),
-                getSetorIdFromToken(jwt.getClaim("roles").asList(String.class))
+                getSetorIdFromToken(jwt.getClaim("roles").asList(String.class)),
+                token
         );
     }
 

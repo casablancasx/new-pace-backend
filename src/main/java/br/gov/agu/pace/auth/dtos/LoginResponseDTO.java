@@ -1,6 +1,7 @@
 package br.gov.agu.pace.auth.dtos;
 
-import br.gov.agu.pace.core.domain.enums.UserRole;
+import br.gov.agu.pace.domain.enums.UserRole;
+import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

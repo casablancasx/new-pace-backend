@@ -1,8 +1,6 @@
-package br.gov.agu.pace.core.domain.unidade;
+package br.gov.agu.pace.domain.unidade;
 
-import br.gov.agu.pace.auth.dtos.SetorDTO;
-import br.gov.agu.pace.core.domain.setor.SetorEntity;
-import br.gov.agu.pace.core.domain.setor.SetorRepository;
+import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

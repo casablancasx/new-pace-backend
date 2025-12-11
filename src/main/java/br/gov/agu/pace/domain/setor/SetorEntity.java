@@ -1,7 +1,6 @@
-package br.gov.agu.pace.core.domain.setor;
+package br.gov.agu.pace.domain.setor;
 
-import br.gov.agu.pace.core.domain.user.SapiensUser;
-import br.gov.agu.pace.core.domain.user.UserEntity;
+import br.gov.agu.pace.domain.user.UserEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;

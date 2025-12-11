@@ -1,14 +1,13 @@
-package br.gov.agu.pace.core.domain.user;
+package br.gov.agu.pace.domain.user;
 
-import br.gov.agu.pace.auth.dtos.SetorDTO;
-import br.gov.agu.pace.client.SapiensClient;
-import br.gov.agu.pace.core.domain.enums.UserRole;
-import br.gov.agu.pace.core.domain.setor.SetorEntity;
-import br.gov.agu.pace.core.domain.setor.SetorService;
-import br.gov.agu.pace.core.domain.unidade.UnidadeEntity;
-import br.gov.agu.pace.core.domain.unidade.UnidadeService;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
+import br.gov.agu.pace.auth.dtos.UserFromTokenDTO;
+import br.gov.agu.pace.integrations.client.SapiensClient;
+import br.gov.agu.pace.integrations.dtos.SetorDTO;
+import br.gov.agu.pace.domain.enums.UserRole;
+import br.gov.agu.pace.domain.setor.SetorEntity;
+import br.gov.agu.pace.domain.setor.SetorService;
+import br.gov.agu.pace.domain.unidade.UnidadeEntity;
+import br.gov.agu.pace.domain.unidade.UnidadeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +22,10 @@ public class UserService {
     private final SapiensClient sapiensClient;
     private final UnidadeService unidadeService;
 
-    public UserEntity buscarOuCriarUsuario(String token) {
-
-        DecodedJWT jwt = JWT.decode(token);
-        Long userId = jwt.getClaim("id").asLong();
-
-        return userRepository.findById(userId)
+    public UserEntity buscarOuCriarUsuario(UserFromTokenDTO userFromTokenDTO) {
+        return userRepository.findById(userFromTokenDTO.getSapiensId())
                 .map(this::atualizarUltimoAcesso)
-                .orElseGet(() -> criarNovoUsuario(jwt, token));
+                .orElseGet(() -> criarNovoUsuario(userFromTokenDTO));
     }
 
     private UserEntity atualizarUltimoAcesso(UserEntity usuario) {
@@ -38,18 +33,18 @@ public class UserService {
         return userRepository.save(usuario);
     }
 
-    public UserEntity criarNovoUsuario(DecodedJWT tokenDecodificado, String token) {
+    public UserEntity criarNovoUsuario(UserFromTokenDTO userFromTokenDTO) {
 
         UserEntity novoUsuario = new UserEntity();
 
-        novoUsuario.setSapiensId(tokenDecodificado.getClaim("id").asLong());
-        novoUsuario.setEmail(tokenDecodificado.getClaim("email").asString());
-        novoUsuario.setNome(tokenDecodificado.getClaim("nome").asString());
+        novoUsuario.setSapiensId(userFromTokenDTO.getSapiensId());
+        novoUsuario.setEmail(userFromTokenDTO.getEmail());
+        novoUsuario.setNome(userFromTokenDTO.getNome());
 
         // Consulta dados no SAPIENS (setor + unidade)
         SetorDTO dadosSetor = sapiensClient.getInformacoesSetorPorId(
-                novoUsuario.getSapiensId(),
-                token
+                userFromTokenDTO.getSapiensId(),
+                userFromTokenDTO.getToken()
         );
 
         SetorEntity setor = setorService.buscarOuCriarSetorPorId(dadosSetor);
