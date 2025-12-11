@@ -1,0 +1,22 @@
+package br.gov.agu.pace.core.domain.user;
+
+import br.gov.agu.pace.core.domain.enums.UserRole;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.TimeZone;
+
+@Entity
+@Table(name = "tb_users")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserEntity extends SapiensUser{
+    private UserRole role;
+    private LocalDateTime ultimoAcesso;
+    private LocalDateTime dataCadastro = LocalDateTime.now(TimeZone.getDefault().toZoneId());
+}
