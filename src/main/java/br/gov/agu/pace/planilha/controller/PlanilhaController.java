@@ -16,7 +16,7 @@ public class PlanilhaController {
 
 
     @PostMapping("/importar")
-    public synchronized ResponseEntity<PlanilhaDTO> importarPlanilha(final @RequestParam("file") MultipartFile file, @RequestHeader("Authorization") String token) {
+    public synchronized ResponseEntity<PlanilhaDTO> importarPlanilha(final @RequestParam("file") MultipartFile file, @RequestHeader("Authorization") String token) throws Exception {
         token = token.replace("Bearer ", "");
         PlanilhaDTO response = planilhaService.importarPlanilha(file, token);
         return ResponseEntity.ok(response);

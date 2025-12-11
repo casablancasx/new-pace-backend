@@ -15,21 +15,21 @@ public class SapiensClient {
     private final RestClient restClient;
 
 
-    public LoginSapiensApiResponse getTokenSuperSapiens(LoginRequestDTO data){
-        try{
+    public LoginSapiensApiResponse getTokenSuperSapiens(LoginRequestDTO data) {
+        try {
             return restClient
                     .post()
                     .uri("/auth/ldap_get_token")
                     .body(data)
                     .retrieve()
                     .body(LoginSapiensApiResponse.class);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String refreshToken(String tokenAntigo){
-        try{
+    public String refreshToken(String tokenAntigo) {
+        try {
             return restClient
                     .get()
                     .uri("/auth/refresh_token")
@@ -37,13 +37,13 @@ public class SapiensClient {
                     .retrieve()
                     .body(JsonNode.class)
                     .get("token").asString();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public SetorDTO getInformacoesSetorPorId(Long setorId, String token){
-        try{
+    public SetorDTO getInformacoesSetorPorId(Long setorId, String token) {
+        try {
             var apiResponse = restClient
                     .get()
                     .uri(uriBuilder -> uriBuilder
@@ -62,8 +62,80 @@ public class SapiensClient {
                     apiResponse.get("nome").asString()
             );
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    public Long getProcessoIdPorNumeroProcosso(String numeroProcesso, String token) {
+
+        try{
+
+            String numeroProcessoFormatado = numeroProcesso.replaceAll("[^0-9]", "");
+
+            var apiResponse = restClient
+                    .get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/v1/administrativo/processo")
+                            .queryParam("where", "{\"andX\":[{\"vinculacoesProcessosJudiciaisProcessos.processoJudicial.numero\":\"like:" + numeroProcessoFormatado + "%\"}]}")
+                            .queryParam("limit", "1")
+                            .queryParam("offset", "0")
+                            .build()
+                    )
+                    .header("Authorization", "Bearer " + token)
+                    .retrieve()
+                    .toEntity(JsonNode.class);
+
+
+            return apiResponse.getBody().get("entities").get(0).get("id").asLong();
+
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+
+
+
+    }
+
+
+    public Long getIdDocumentoContestaao(Long processoId, String token){
+     try{
+         var apiResponse = restClient
+                 .get()
+                 .uri(uriBuilder -> uriBuilder
+                         .path("/v1/administrativo/juntada")
+                         .queryParam("where", String.format("{\"volume.processo.id\":\"eq:%s\",\"documento.tipoDocumento.id\":\"eq:85\"}", processoId))
+                         .queryParam("populate", "[\"documento\", \"documento.componentesDigitais\"]")
+                         .queryParam("limit", "1")
+                         .queryParam("offset", "0")
+                         .queryParam("order", "{\"numeracaoSequencial\":\"ASC\"}")
+                         .build()
+                 )
+                 .header("Authorization", "Bearer " + token)
+                 .retrieve()
+                 .toEntity(JsonNode.class);
+
+         return apiResponse.getBody().get("entities").get(0).get("documento").get("componentesDigitais").get(0).get("id").asLong();
+     }catch(Exception e){
+          throw new RuntimeException(e);
+      }
+    }
+
+    public String obterArquivoBase64PorIdDocumento(Long documentoId, String token){
+
+        var apiResponse = restClient.get()
+                .uri(String.format("/v1/administrativo/componente_digital/%s/download",documentoId))
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(JsonNode.class);
+
+        String conteudo = apiResponse.getBody().get("conteudo").asText();
+
+
+        int index = conteudo.indexOf("base64,");
+        return conteudo.substring(index + 7);
+    }
+
+
+
 }

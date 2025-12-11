@@ -1,5 +1,8 @@
 package br.gov.agu.pace.planilha.service;
 
+import br.gov.agu.pace.auth.service.TokenService;
+import br.gov.agu.pace.contestacao.ContestacaoService;
+import br.gov.agu.pace.domain.pauta.service.PautaService;
 import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
 import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
 import br.gov.agu.pace.planilha.dtos.PlanilhaDTO;
@@ -18,10 +21,17 @@ import java.util.Set;
 public class PlanilhaService {
 
     private final ExcelReaderService excelReaderService;
+    private final ContestacaoService contestacaoService;
+    private final TokenService tokenService;
 
     public PlanilhaDTO importarPlanilha(MultipartFile file, String token) throws Exception {
 
         Set<AudienciaDTO> audiencias = excelReaderService.importarPlanilha(file);
+
+        for (AudienciaDTO audiencia : audiencias) {
+            token = tokenService.renovarTokenSeExpirado(token);
+            audiencia = contestacaoService.adicionarTipoContestacaoEProcessoId(audiencia, token);
+        }
 
         List<PautaDTO> pautas = agruparAudienciasEmPautas(audiencias);
 

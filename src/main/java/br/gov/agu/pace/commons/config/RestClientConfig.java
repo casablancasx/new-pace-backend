@@ -13,6 +13,18 @@ public class RestClientConfig {
 
     @Bean
     public RestClient restClient() {
-        return RestClient.builder().baseUrl(baseUrl).build();
+        return RestClient.builder()
+                .baseUrl(baseUrl)
+                .requestInterceptor((request, body, execution) -> {
+                    try {
+                        // Delay mínimo de 350ms antes de cada request
+                        Thread.sleep(350);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+
+                    return execution.execute(request, body);
+                })
+                .build();
     }
 }

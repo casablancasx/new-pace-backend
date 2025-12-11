@@ -1,14 +1,19 @@
 package br.gov.agu.pace.auth.service;
 
 import br.gov.agu.pace.auth.dtos.UserFromTokenDTO;
+import br.gov.agu.pace.integrations.client.SapiensClient;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
+
+    private final SapiensClient sapiensClient;
 
 
     public UserFromTokenDTO getUserFromToken(String token) {
@@ -30,6 +35,22 @@ public class TokenService {
                 .findFirst()
                 .map(setorId -> Long.parseLong(setorId.replace("ACL_SETOR_", "")))
                 .get();
+    }
+
+    public String renovarTokenSeExpirado(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+
+        long expMillis = jwt.getExpiresAt().getTime();
+        long agora = System.currentTimeMillis();
+
+        // 3 minutos antes (3 * 60 * 1000 = 180000)
+        long janelaRenovacao = 3 * 60 * 1000;
+
+        if (expMillis - janelaRenovacao <= agora) {
+            return sapiensClient.refreshToken(token);
+        }
+
+        return token;
     }
 
 }
