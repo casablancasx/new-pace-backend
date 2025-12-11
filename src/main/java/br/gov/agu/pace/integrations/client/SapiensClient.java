@@ -6,7 +6,12 @@ import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import tools.jackson.databind.JsonNode;
+
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @RequiredArgsConstructor
@@ -68,49 +73,56 @@ public class SapiensClient {
     }
 
     public Long getProcessoIdPorNumeroProcosso(String numeroProcesso, String token) {
+        String numeroLimpo = numeroProcesso.replaceAll("[^0-9]", "");
 
-        try{
+        // Monta a URL já com tudo codificado, sem passar pela lambda do UriBuilder
+        String whereParam = "where={\"andX\":[{\"vinculacoesProcessosJudiciaisProcessos.processoJudicial.numero\":\"like:"+ numeroLimpo +"%\"}]}";
+        String limitParam = "limit=1";
+        String offsetParam = "offset=0";
 
-            String numeroProcessoFormatado = numeroProcesso.replaceAll("[^0-9]", "");
-
-            var apiResponse = restClient
-                    .get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/v1/administrativo/processo")
-                            .queryParam("where", "{\"andX\":[{\"vinculacoesProcessosJudiciaisProcessos.processoJudicial.numero\":\"like:" + numeroProcessoFormatado + "%\"}]}")
-                            .queryParam("limit", "1")
-                            .queryParam("offset", "0")
-                            .build()
-                    )
-                    .header("Authorization", "Bearer " + token)
-                    .retrieve()
-                    .toEntity(JsonNode.class);
+        URI uri = UriComponentsBuilder.fromUriString("https://supersapiensbackend.agu.gov.br/v1/administrativo/processo")
+                .query(whereParam)
+                .query(limitParam)
+                .query(offsetParam)
+                .build()
+                .toUri();
 
 
-            return apiResponse.getBody().get("entities").get(0).get("id").asLong();
+        var response = restClient.get()
+                .uri(uri)                     // ← passa a string pronta, NÃO usa lambda
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(JsonNode.class);
 
-        }catch(Exception e){
-            throw new RuntimeException(e);
-        }
-
-
-
+        return response.getBody().get("entities").get(0).get("id").asLong();
     }
 
 
     public Long getIdDocumentoContestaao(Long processoId, String token){
      try{
+
+         String whereParam = String.format("where={\"volume.processo.id\":\"eq:%s\",\"documento.tipoDocumento.id\":\"eq:85\"}",processoId);
+         String populateParam = "populate=[\"documento\", \"documento.componentesDigitais\"]";
+         String limitParam = "limit=1";
+         String offsetParam = "offset=0";
+         String orderParam = "order={\"numeracaoSequencial\":\"ASC\"}";
+
+
+         URI uri = UriComponentsBuilder.fromUriString("https://supersapiensbackend.agu.gov.br/v1/administrativo/juntada")
+                 .query(whereParam)
+                 .query(limitParam)
+                 .query(populateParam)
+                 .query(offsetParam)
+                 .query(orderParam)
+                 .build()
+                 .toUri();
+
+
+
+
          var apiResponse = restClient
                  .get()
-                 .uri(uriBuilder -> uriBuilder
-                         .path("/v1/administrativo/juntada")
-                         .queryParam("where", String.format("{\"volume.processo.id\":\"eq:%s\",\"documento.tipoDocumento.id\":\"eq:85\"}", processoId))
-                         .queryParam("populate", "[\"documento\", \"documento.componentesDigitais\"]")
-                         .queryParam("limit", "1")
-                         .queryParam("offset", "0")
-                         .queryParam("order", "{\"numeracaoSequencial\":\"ASC\"}")
-                         .build()
-                 )
+                 .uri(uri)
                  .header("Authorization", "Bearer " + token)
                  .retrieve()
                  .toEntity(JsonNode.class);

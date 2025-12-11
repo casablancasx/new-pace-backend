@@ -18,7 +18,7 @@ public class RestClientConfig {
                 .requestInterceptor((request, body, execution) -> {
                     try {
                         // Delay mínimo de 350ms antes de cada request
-                        Thread.sleep(350);
+                        Thread.sleep(300);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     }
