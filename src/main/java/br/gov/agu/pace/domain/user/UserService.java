@@ -43,7 +43,7 @@ public class UserService {
 
         // Consulta dados no SAPIENS (setor + unidade)
         SetorDTO dadosSetor = sapiensClient.getInformacoesSetorPorId(
-                userFromTokenDTO.getSapiensId(),
+                userFromTokenDTO.getSetorId(),
                 userFromTokenDTO.getToken()
         );
 

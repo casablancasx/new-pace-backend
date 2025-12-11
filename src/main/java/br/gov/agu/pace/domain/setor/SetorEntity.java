@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_setores")
@@ -26,7 +27,7 @@ public class SetorEntity {
     private String nome;
 
     @OneToMany(mappedBy = "setor")
-    private HashSet<UserEntity> usuarios = new HashSet<>();
+    private Set<UserEntity> usuarios = new HashSet<>();
 
     public SetorEntity(Long setorId, String nome) {
         this.setorId = setorId;
