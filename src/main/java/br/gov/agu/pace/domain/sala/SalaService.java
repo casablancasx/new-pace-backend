@@ -16,8 +16,6 @@ public class SalaService {
         return repository.findByNome(nome).orElseGet(() -> criarNovaSala(nome));
     }
 
-
-
     private SalaEntity criarNovaSala(String nome){
         return repository.save(new SalaEntity(nome));
     }

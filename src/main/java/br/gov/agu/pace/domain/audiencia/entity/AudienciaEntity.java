@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.audiencia.entity;
 
+import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
 import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
@@ -10,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tb_audiencias")
@@ -26,6 +29,14 @@ public class AudienciaEntity {
     private String numeroProcesso;
 
     private String nomeParte;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tb_audiencia_advogado",
+            joinColumns = @JoinColumn(name = "audiencia_id"),
+            inverseJoinColumns = @JoinColumn(name = "advogado_id")
+    )
+    private List<AdvogadoEntity> advogados;
 
     private String horario;
 
@@ -45,7 +56,6 @@ public class AudienciaEntity {
     @ManyToOne
     @JoinColumn(name = "assunto_id")
     private AssuntoEntity assunto;
-
 
     @ManyToOne
     @JoinColumn(name = "pauta_id")

@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.orgaoJulgador;
 
+import br.gov.agu.pace.domain.uf.UfEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +20,8 @@ public class OrgaoJulgadorEntity {
     private Long orgaoJulgadorId;
 
     private String nome;
+
+    @ManyToOne
+    @JoinColumn(name = "uf_id")
+    private UfEntity uf;
 }

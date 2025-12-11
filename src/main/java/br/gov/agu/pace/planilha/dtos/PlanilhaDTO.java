@@ -18,5 +18,4 @@ public class PlanilhaDTO {
     private String file;
     private int totalAudiencias;
     private int totalPautas;
-    private List<PautaDTO> pautas;
 }

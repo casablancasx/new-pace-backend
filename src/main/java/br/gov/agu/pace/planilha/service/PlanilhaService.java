@@ -7,6 +7,7 @@ import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
 import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
 import br.gov.agu.pace.planilha.dtos.PlanilhaDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,49 +29,24 @@ public class PlanilhaService {
 
         Set<AudienciaDTO> audiencias = excelReaderService.importarPlanilha(file);
 
-        for (AudienciaDTO audiencia : audiencias) {
-            token = tokenService.renovarTokenSeExpirado(token);
-            audiencia = contestacaoService.adicionarTipoContestacaoEProcessoId(audiencia, token);
-        }
-
-        List<PautaDTO> pautas = agruparAudienciasEmPautas(audiencias);
+        processarAudiencias(token, audiencias);
 
         return PlanilhaDTO.builder()
                 .message("Planilha importada com sucesso")
                 .file(file.getOriginalFilename())
                 .totalAudiencias(audiencias.size())
-                .totalPautas(pautas.size())
-                .pautas(pautas)
+                .totalPautas(1234)
                 .build();
     }
 
-    /**
-     * Agrupa as audiências em pautas com base em: Data, Turno, Sala e OrgaoJulgador
-     */
-    private List<PautaDTO> agruparAudienciasEmPautas(Set<AudienciaDTO> audiencias) {
-        Map<String, PautaDTO> pautasMap = new LinkedHashMap<>();
+    @Async
+    protected void processarAudiencias(String token, Set<AudienciaDTO> audiencias) {
 
         for (AudienciaDTO audiencia : audiencias) {
-            String chave = PautaDTO.gerarChave(
-                    audiencia.getData(),
-                    audiencia.getTurno(),
-                    audiencia.getSala(),
-                    audiencia.getOrgaoJulgador()
-            );
-
-            PautaDTO pauta = pautasMap.computeIfAbsent(chave, k ->
-                    PautaDTO.builder()
-                            .data(audiencia.getData())
-                            .turno(audiencia.getTurno())
-                            .sala(audiencia.getSala())
-                            .orgaoJulgador(audiencia.getOrgaoJulgador())
-                            .audiencias(new ArrayList<>())
-                            .build()
-            );
-
-            pauta.getAudiencias().add(audiencia);
+            token = tokenService.renovarTokenSeExpirado(token);
+            audiencia = contestacaoService.adicionarTipoContestacaoEProcessoId(audiencia, token);
         }
-
-        return new ArrayList<>(pautasMap.values());
     }
+
+
 }

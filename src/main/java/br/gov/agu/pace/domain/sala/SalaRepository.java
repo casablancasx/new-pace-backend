@@ -11,6 +11,4 @@ import java.util.Optional;
 public interface SalaRepository extends JpaRepository<SalaEntity, Long> {
 
     Optional<SalaEntity> findByNome(String nome);
-
-    List<SalaEntity> findAllByOrgaoJulgador_OrgaoJulgadorId(Long orgaoJulgadorId);
 }
