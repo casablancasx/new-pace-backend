@@ -1,4 +1,4 @@
-package br.gov.agu.pace.planilha.dtos;
+package br.gov.agu.pace.domain.planilha.dtos;
 
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.enums.Turno;

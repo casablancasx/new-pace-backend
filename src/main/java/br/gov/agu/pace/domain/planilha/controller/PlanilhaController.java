@@ -1,7 +1,7 @@
-package br.gov.agu.pace.planilha.controller;
+package br.gov.agu.pace.domain.planilha.controller;
 
-import br.gov.agu.pace.planilha.dtos.PlanilhaDTO;
-import br.gov.agu.pace.planilha.service.PlanilhaService;
+import br.gov.agu.pace.domain.planilha.dtos.PlanilhaDTO;
+import br.gov.agu.pace.domain.planilha.service.PlanilhaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

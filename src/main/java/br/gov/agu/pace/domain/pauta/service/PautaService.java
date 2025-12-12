@@ -18,7 +18,7 @@ import br.gov.agu.pace.domain.sala.SalaEntity;
 import br.gov.agu.pace.domain.sala.SalaService;
 import br.gov.agu.pace.domain.uf.UfEntity;
 import br.gov.agu.pace.domain.uf.UfService;
-import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
+import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,6 @@ public class PautaService {
     private final PautaMapper pautaMapper;
     private final AudienciaMapper audienciaMapper;
     
-    // Services de domínio
     private final SalaService salaService;
     private final UfService ufService;
     private final OrgaoJulgadorService orgaoJulgadorService;
@@ -52,26 +51,12 @@ public class PautaService {
                 ));
     }
 
-    /**
-     * Busca uma pauta existente ou retorna null.
-     */
+
     private PautaEntity buscarPautaExistente(LocalDate data, Turno turno, SalaEntity sala, OrgaoJulgadorEntity orgaoJulgador) {
         return pautaRepository.findByDataAndTurnoAndSalaAndOrgaoJulgador(data, turno, sala, orgaoJulgador)
                 .orElse(null);
     }
 
-    /**
-     * Salva as pautas e todas as entidades relacionadas de forma performática.
-     * 
-     * Ordem de persistência:
-     * 1. UFs
-     * 2. Salas
-     * 3. Órgãos Julgadores
-     * 4. Assuntos
-     * 5. Advogados (salvos como NÃO prioritários quando vêm do upload)
-     * 6. Pautas
-     * 7. Audiências
-     */
     @Transactional
     public void salvarPautas(Set<AudienciaDTO> audienciasDTO) {
         log.info("Iniciando persistência de {} audiências", audienciasDTO.size());
@@ -89,10 +74,11 @@ public class PautaService {
             OrgaoJulgadorEntity orgaoJulgador = orgaoJulgadorService.buscarOuCriarOrgaoJulgador(
                     pautaDTO.getOrgaoJulgador(), uf);
             
-            // Verificar se a pauta já existe ou criar nova
+            // Verificar se a pauta já existe
             PautaEntity pauta = buscarPautaExistente(pautaDTO.getData(), pautaDTO.getTurno(), sala, orgaoJulgador);
             
-            if (pauta == null) {
+            boolean isPautaNova = (pauta == null);
+            if (isPautaNova) {
                 pauta = pautaMapper.toEntity(pautaDTO, sala, orgaoJulgador);
                 pautasParaSalvar.add(pauta);
             }
@@ -107,11 +93,30 @@ public class PautaService {
                 List<AdvogadoEntity> advogados = advogadoService.resolverAdvogados(
                         audienciaDTO.getAdvogados(), uf);
                 
-                // Criar entidade de audiência
-                AudienciaEntity audiencia = audienciaMapper.toEntity(
-                        audienciaDTO, pautaFinal, assunto, advogados);
+                // Verificar se a audiência já existe na pauta
+                Optional<AudienciaEntity> audienciaExistente = Optional.empty();
+                if (!isPautaNova) {
+                    audienciaExistente = audienciaRepository
+                            .findByNumeroProcessoAndPauta(audienciaDTO.getNumeroProcesso(), pautaFinal);
+                }
                 
-                audienciasParaSalvar.add(audiencia);
+                AudienciaEntity audiencia;
+                if (audienciaExistente.isPresent()) {
+                    // Atualizar audiência existente se houver alterações
+                    audiencia = audienciaExistente.get();
+                    boolean alterada = atualizarAudienciaSeNecessario(audiencia, audienciaDTO, assunto, advogados);
+                    if (alterada) {
+                        audienciasParaSalvar.add(audiencia);
+                        log.debug("Audiência {} atualizada", audienciaDTO.getNumeroProcesso());
+                    } else {
+                        log.debug("Audiência {} sem alterações", audienciaDTO.getNumeroProcesso());
+                    }
+                } else {
+                    // Criar nova audiência
+                    audiencia = audienciaMapper.toEntity(audienciaDTO, pautaFinal, assunto, advogados);
+                    audienciasParaSalvar.add(audiencia);
+                    log.debug("Nova audiência {} adicionada", audienciaDTO.getNumeroProcesso());
+                }
             });
         });
         
@@ -124,9 +129,39 @@ public class PautaService {
         // Salvar audiências em batch
         if (!audienciasParaSalvar.isEmpty()) {
             audienciaRepository.saveAll(audienciasParaSalvar);
-            log.info("{} audiências salvas", audienciasParaSalvar.size());
+            log.info("{} audiências salvas/atualizadas", audienciasParaSalvar.size());
         }
         
         log.info("Persistência concluída com sucesso");
+    }
+
+
+    private boolean atualizarAudienciaSeNecessario(AudienciaEntity audiencia, AudienciaDTO dto,
+                                                    AssuntoEntity assunto, List<AdvogadoEntity> advogados) {
+        boolean alterada = false;
+        
+        if (!Objects.equals(audiencia.getNomeParte(), dto.getPoloAtivo())) {
+            audiencia.setNomeParte(dto.getPoloAtivo());
+            alterada = true;
+        }
+        if (!Objects.equals(audiencia.getHorario(), dto.getHora())) {
+            audiencia.setHorario(dto.getHora());
+            alterada = true;
+        }
+        if (!Objects.equals(audiencia.getTipoContestacao(), dto.getTipoContestacao())) {
+            audiencia.setTipoContestacao(dto.getTipoContestacao());
+            alterada = true;
+        }
+
+        if (!Objects.equals(audiencia.getAssunto(), assunto)) {
+            audiencia.setAssunto(assunto);
+            alterada = true;
+        }
+        if (!Objects.equals(audiencia.getAdvogados(), advogados)) {
+            audiencia.setAdvogados(advogados);
+            alterada = true;
+        }
+        
+        return alterada;
     }
 }

@@ -2,7 +2,7 @@ package br.gov.agu.pace.contestacao;
 
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.integrations.client.SapiensClient;
-import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
+import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;

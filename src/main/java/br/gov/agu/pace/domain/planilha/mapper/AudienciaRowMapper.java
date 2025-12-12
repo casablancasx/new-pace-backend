@@ -1,9 +1,8 @@
-package br.gov.agu.pace.planilha.mapper;
+package br.gov.agu.pace.domain.planilha.mapper;
 
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.enums.Uf;
-import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
-import org.apache.poi.ss.usermodel.Cell;
+import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

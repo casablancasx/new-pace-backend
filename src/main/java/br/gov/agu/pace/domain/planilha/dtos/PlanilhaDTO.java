@@ -1,4 +1,4 @@
-package br.gov.agu.pace.planilha.dtos;
+package br.gov.agu.pace.domain.planilha.dtos;
 
 import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
 import lombok.AllArgsConstructor;

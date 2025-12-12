@@ -5,7 +5,7 @@ import br.gov.agu.pace.domain.assunto.AssuntoEntity;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
-import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
+import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

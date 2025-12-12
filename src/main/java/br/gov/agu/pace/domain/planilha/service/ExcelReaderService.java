@@ -1,8 +1,8 @@
-package br.gov.agu.pace.planilha.service;
+package br.gov.agu.pace.domain.planilha.service;
 
-import br.gov.agu.pace.planilha.dtos.AudienciaDTO;
+import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 
-import br.gov.agu.pace.planilha.mapper.AudienciaRowMapper;
+import br.gov.agu.pace.domain.planilha.mapper.AudienciaRowMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
