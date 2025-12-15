@@ -32,7 +32,8 @@ public class AudienciaMapper {
         
         // Audiência é prioritária se houver pelo menos um advogado prioritário
         boolean hasPrioritario = advogados.stream().anyMatch(AdvogadoEntity::isPrioritario);
-        entity.setPrioritario(hasPrioritario);
+        entity.setPrioritaria(hasPrioritario);
+        entity.setProcessoId(dto.getProcessoId());
         
         return entity;
     }

@@ -1,9 +1,14 @@
 package br.gov.agu.pace.integrations.client;
 
 import br.gov.agu.pace.auth.dtos.LoginRequestDTO;
+import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
+import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
+import br.gov.agu.pace.domain.user.SapiensUser;
 import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,6 +17,11 @@ import tools.jackson.databind.JsonNode;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -146,6 +156,49 @@ public class SapiensClient {
 
         int index = conteudo.indexOf("base64,");
         return conteudo.substring(index + 7);
+    }
+
+    public HttpStatusCode cadastrarTarefaSapiens(SapiensUser user, AudienciaEntity audiencia,Long setorOrigemId, Long especieTarefaId, String token) {
+
+        var pauta = audiencia.getPauta();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("postIt", null);
+        body.put("urgente", null);
+        body.put("observacao", String.format("%s - %s - %s - %s",
+                audiencia.getTipoContestacao() != null ? audiencia.getTipoContestacao() : "N/A",
+                pauta.getData() != null ? pauta.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A",
+                pauta.getOrgaoJulgador() != null ? pauta.getOrgaoJulgador().getNome() : "N/A",
+                pauta.getTurno() != null ? pauta.getTurno() : "N/A"));
+        body.put("localEvento", null);
+        body.put("dataHoraInicioPrazo", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        body.put("dataHoraFinalPrazo", pauta.getData().atTime(20, 0, 0).format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));        body.put("dataHoraLeitura", null);
+        body.put("dataHoraDistribuicao", null);
+        body.put("processo", audiencia.getProcessoId());
+        body.put("especieTarefa", especieTarefaId); // Espécie Tarefa
+        body.put("usuarioResponsavel", user.getSapiensId()); //Quem vai receber a tarefa
+        body.put("setorOrigem", setorOrigemId);
+        body.put("setorResponsavel", user.getSapiensId());
+        body.put("distribuicaoAutomatica", false);
+        body.put("folder", null);
+        body.put("prazoDias", ChronoUnit.DAYS.between(LocalDateTime.now(), pauta.getData().atTime(23, 59, 59)));
+        body.put("isRelevante", null);
+        body.put("locked", null);
+        body.put("diasUteis", null);
+        body.put("blocoProcessos", null);
+        body.put("processos", null);
+        body.put("blocoResponsaveis", null);
+        body.put("grupoContato", null);
+        body.put("usuarios", null);
+        body.put("setores", null);
+
+        return restClient.post()
+                .uri("/v1/administrativo/tarefa")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(JsonNode.class)
+                .getStatusCode();
+
     }
 
 

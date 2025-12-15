@@ -2,16 +2,19 @@ package br.gov.agu.pace.domain.audiencia.entity;
 
 import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
+import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;
 import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
-import br.gov.agu.pace.domain.sala.SalaEntity;
+import br.gov.agu.pace.domain.pautista.PautistaEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Entity
@@ -40,7 +43,7 @@ public class AudienciaEntity {
 
     private String horario;
 
-    private boolean isPrioritario;
+    private boolean prioritaria;
 
     @Enumerated(EnumType.STRING)
     private TipoContestacao tipoContestacao;
@@ -60,5 +63,22 @@ public class AudienciaEntity {
     @ManyToOne
     @JoinColumn(name = "pauta_id")
     private PautaEntity pauta;
+
+    //Flag para identificar se houve adicao de uma nova audiencia em uma pauta existente
+    private boolean novaAudiencia;
+
+    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
+    @ManyToOne
+    @JoinColumn(name = "pautista_id")
+    private PautistaEntity pautista;
+
+    @ManyToOne
+    @JoinColumn(name = "avaliador_id")
+    private AvaliadorEntity avaliador;
+
+    @Column(name = "processo_id")
+    private Long processoId;
+
 
 }

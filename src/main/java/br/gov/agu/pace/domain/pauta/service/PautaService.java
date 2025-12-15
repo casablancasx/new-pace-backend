@@ -85,6 +85,7 @@ public class PautaService {
             
             // Processar audiências desta pauta
             final PautaEntity pautaFinal = pauta;
+            PautaEntity finalPauta = pauta;
             audienciasDaPauta.forEach(audienciaDTO -> {
                 // Resolver assunto
                 AssuntoEntity assunto = assuntoService.buscarOuCriarAssunto(audienciaDTO.getAssunto());
@@ -114,6 +115,8 @@ public class PautaService {
                 } else {
                     // Criar nova audiência
                     audiencia = audienciaMapper.toEntity(audienciaDTO, pautaFinal, assunto, advogados);
+                    audiencia.setNovaAudiencia(true);
+                    finalPauta.setPossuiNovaAudiencia(true);
                     audienciasParaSalvar.add(audiencia);
                     log.debug("Nova audiência {} adicionada", audienciaDTO.getNumeroProcesso());
                 }
