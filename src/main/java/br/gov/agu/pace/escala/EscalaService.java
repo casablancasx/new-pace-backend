@@ -1,7 +1,6 @@
 package br.gov.agu.pace.escala;
 
 import br.gov.agu.pace.auth.service.TokenService;
-import br.gov.agu.pace.cadadastroTarefaSapiens.CadastrarTarefaService;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;

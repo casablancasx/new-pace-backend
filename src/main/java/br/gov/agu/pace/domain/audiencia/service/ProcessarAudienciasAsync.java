@@ -1,7 +1,7 @@
 package br.gov.agu.pace.domain.audiencia.service;
 
 import br.gov.agu.pace.auth.service.TokenService;
-import br.gov.agu.pace.contestacao.ContestacaoService;
+import br.gov.agu.pace.domain.planilha.service.ContestacaoService;
 import br.gov.agu.pace.domain.pauta.service.PautaService;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import br.gov.agu.pace.domain.planilha.entity.PlanilhaEntity;

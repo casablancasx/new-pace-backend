@@ -1,4 +1,4 @@
-package br.gov.agu.pace.cadadastroTarefaSapiens;
+package br.gov.agu.pace.escala;
 
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;

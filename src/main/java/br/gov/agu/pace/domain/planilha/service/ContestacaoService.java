@@ -1,4 +1,4 @@
-package br.gov.agu.pace.contestacao;
+package br.gov.agu.pace.domain.planilha.service;
 
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.integrations.client.SapiensClient;
