@@ -1,6 +1,11 @@
 package br.gov.agu.pace.domain.sala;
 
+import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,4 +26,8 @@ public class SalaService {
     }
 
 
+    public Page<SalaEntity> listarSalas(int page, int size, String nome, String order) {
+        Pageable pageable = PageRequest.of(size, page, Sort.by(order));
+        return repository.buscarSalas(nome,pageable);
+    }
 }
