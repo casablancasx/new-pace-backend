@@ -1,5 +1,7 @@
-package br.gov.agu.pace.domain.sala;
+package br.gov.agu.pace.domain.assunto;
 
+import br.gov.agu.pace.domain.sala.SalaEntity;
+import br.gov.agu.pace.domain.sala.SalaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -11,18 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/sala")
 @RequiredArgsConstructor
-public class SalaController {
+public class AssuntoController {
 
-    private final SalaService salaService;
+    private final AssuntoService assuntoService;
 
 
     @GetMapping
-    public ResponseEntity<Page<SalaEntity>> listarSalas(
+    public ResponseEntity<Page<AssuntoEntity>> listarSalas(
             @RequestParam(required = false) String nome,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        var salas = salaService.listarSalas(page, size, nome, "nome");
-        return ResponseEntity.ok(salas);
+        var assuntos = assuntoService.listarAssuntos(page, size, nome, "nome");
+        return ResponseEntity.ok(assuntos);
     }
 }

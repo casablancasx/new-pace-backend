@@ -1,6 +1,10 @@
 package br.gov.agu.pace.domain.assunto;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,5 +27,10 @@ public class AssuntoService {
         AssuntoEntity novoAssunto = new AssuntoEntity();
         novoAssunto.setNome(nome);
         return repository.save(novoAssunto);
+    }
+
+    public Page<AssuntoEntity> listarAssuntos(int page, int size, String nome, String order) {
+        Pageable pageable = PageRequest.of(page,size, Sort.by(order));
+        return repository.buscarAssuntos(nome, pageable);
     }
 }
