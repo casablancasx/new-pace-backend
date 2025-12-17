@@ -7,7 +7,6 @@ import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;
 import br.gov.agu.pace.domain.avaliador.AvaliadorRepository;
 import br.gov.agu.pace.domain.avaliador.AvaliadorService;
-import br.gov.agu.pace.domain.escala.EscalaRequestDTO;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pauta.repository.PautaRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,16 +30,16 @@ public class EscalaService {
 
 
         List<PautaEntity> pautas = pautaRepository.buscarPautasSemAvaliadoresEscalados(
-                data.dataInicio(),
-                data.dataFim(),
-                data.ufs(),
-                data.orgaoJulgadorIds(),
-                data.tipoContestacao()
+                data.getDataInicio(),
+                data.getDataFim(),
+                data.getUfs(),
+                data.getOrgaoJulgadorIds(),
+                data.getTipoContestacao()
         );
 
-        List<AvaliadorEntity> avaliadores = data.avaliadorIds().isEmpty()?
+        List<AvaliadorEntity> avaliadores = data.getAvaliadorIds().isEmpty()?
                 avaliadorRepository.findAll() :
-                avaliadorRepository.buscarAvaliadoresPorIds(data.avaliadorIds());
+                avaliadorRepository.buscarAvaliadoresPorIds(data.getAvaliadorIds());
 
         for (PautaEntity pauta : pautas) {
 
@@ -52,8 +51,8 @@ public class EscalaService {
 
             List<AudienciaEntity> audiencias = pauta.getAudiencias()
                     .stream()
-                    .filter(a -> data.tipoContestacao().contains(a.getTipoContestacao()))
-                    .map(a -> cadastrarTarefaService.cadastrarTarefa(data.setorOrigemId(),data.especieTarefaId(),avaliadorSelecionado,a, finalToken))
+                    .filter(a -> data.getTipoContestacao().contains(a.getTipoContestacao()))
+                    .map(a -> cadastrarTarefaService.cadastrarTarefa(data.getSetorOrigemId(),data.getEspecieTarefaId(),avaliadorSelecionado,a, finalToken))
                     .toList();
 
 
