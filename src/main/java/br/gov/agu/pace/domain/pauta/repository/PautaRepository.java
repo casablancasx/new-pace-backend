@@ -27,7 +27,7 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
 
 
     @Query("SELECT DISTINCT p FROM PautaEntity p " +
-            "LEFT JOIN p.audiencias a " +
+            "LEFT JOIN FETCH p.audiencias a " +
             "WHERE p.data BETWEEN :dataInicio AND :dataFim " +
             "AND (:ufs IS NULL OR p.orgaoJulgador.uf.sigla IN :ufs) " +
             "AND (:orgaoJulgadorIds IS NULL OR p.orgaoJulgador.orgaoJulgadorId IN :orgaoJulgadorIds) " +
@@ -39,5 +39,6 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             @Param("ufs") List<Uf> ufs,
             @Param("orgaoJulgadorIds") List<Long> orgaoJulgadorIds,
             @Param("tiposContestacao") List<TipoContestacao> tiposContestacao);
+
 }
 

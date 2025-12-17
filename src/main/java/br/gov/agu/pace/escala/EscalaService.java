@@ -10,6 +10,7 @@ import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pauta.repository.PautaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class EscalaService {
     private final TokenService tokenService;
 
 
+    @Transactional
     public EscalaResponseDTO escalarAvaliadores(EscalaRequestDTO data, String token){
 
 
@@ -42,6 +44,7 @@ public class EscalaService {
 
         for (PautaEntity pauta : pautas) {
 
+            //Gerenciamento de token para situacoes onde usuario selecionar muitas audiencias
             token = tokenService.renovarTokenSeExpirado(token);
             String finalToken = token;
 

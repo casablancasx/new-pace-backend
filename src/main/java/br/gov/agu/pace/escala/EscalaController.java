@@ -12,10 +12,10 @@ public class EscalaController {
     private final EscalaService escalaService;
 
 
-    @GetMapping("/avaliadores")
+    @PostMapping("/avaliadores")
     public ResponseEntity<EscalaResponseDTO> escalarAvaliadores(@RequestBody EscalaRequestDTO data, @RequestHeader("Authorization") String token) {
-        token = token.replace("Bearer ", "");
-        var response = escalaService.escalarAvaliadores(data, token);
+        String tokenLimpo  = token.replace("Bearer ", "");
+        EscalaResponseDTO response = escalaService.escalarAvaliadores(data, tokenLimpo);
         return ResponseEntity.ok(response);
     }
 }
