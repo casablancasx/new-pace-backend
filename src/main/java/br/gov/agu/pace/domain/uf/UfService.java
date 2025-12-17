@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UfService {
@@ -21,5 +23,11 @@ public class UfService {
         UfEntity novaUf = new UfEntity();
         novaUf.setSigla(sigla);
         return repository.save(novaUf);
+    }
+
+    public List<UfResponseDTO> listarTodas() {
+        return repository.findAll().stream()
+                .map(uf -> new UfResponseDTO(uf.getUfId(), uf.getSigla().name()))
+                .toList();
     }
 }
