@@ -26,8 +26,8 @@ public class SalaService {
     }
 
 
-    public Page<SalaEntity> listarSalas(int page, int size, String nome, String order) {
-        Pageable pageable = PageRequest.of(size, page, Sort.by(order));
+    public Page<SalaEntity> listarSalas(int page, int size, String nome, String orderBy, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort), orderBy));
         return repository.buscarSalas(nome,pageable);
     }
 }

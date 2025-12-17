@@ -19,10 +19,12 @@ public class OrgaoJulgadorController {
     @GetMapping
     public ResponseEntity<Page<OrgaoJulgadorEntity>> listarOrgaoJulgadores(
             @RequestParam(required = false) String nome,
+            @RequestParam(defaultValue = "false") String orderBy,
+            @RequestParam(defaultValue = "asc") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Page<OrgaoJulgadorEntity> orgaos = orgaoJulgadorService.listarOrgaosJulgadores(page, size, nome, "nome");
+        Page<OrgaoJulgadorEntity> orgaos = orgaoJulgadorService.listarOrgaosJulgadores(page, size, nome, orderBy,sort);
         return ResponseEntity.ok(orgaos);
     }
 }

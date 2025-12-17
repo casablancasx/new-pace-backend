@@ -29,8 +29,8 @@ public class AssuntoService {
         return repository.save(novoAssunto);
     }
 
-    public Page<AssuntoEntity> listarAssuntos(int page, int size, String nome, String order) {
-        Pageable pageable = PageRequest.of(page,size, Sort.by(order));
+    public Page<AssuntoEntity> listarAssuntos(int page, int size, String nome, String orderBy, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sort), orderBy));
         return repository.buscarAssuntos(nome, pageable);
     }
 }

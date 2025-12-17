@@ -19,10 +19,12 @@ public class SalaController {
     @GetMapping
     public ResponseEntity<Page<SalaEntity>> listarSalas(
             @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String orderBy,
+            @RequestParam(defaultValue = "asc") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        var salas = salaService.listarSalas(page, size, nome, "nome");
+        var salas = salaService.listarSalas(page, size, nome, orderBy,sort);
         return ResponseEntity.ok(salas);
     }
 }

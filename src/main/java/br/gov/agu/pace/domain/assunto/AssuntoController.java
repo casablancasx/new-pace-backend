@@ -21,10 +21,12 @@ public class AssuntoController {
     @GetMapping
     public ResponseEntity<Page<AssuntoEntity>> listarSalas(
             @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String orderBy,
+            @RequestParam(defaultValue = "asc") String sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        var assuntos = assuntoService.listarAssuntos(page, size, nome, "nome");
+        var assuntos = assuntoService.listarAssuntos(page, size, nome, orderBy,sort);
         return ResponseEntity.ok(assuntos);
     }
 }
