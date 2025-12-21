@@ -78,7 +78,7 @@ public class AudienciaRowMapper {
     private String getAssuntoFromRow(Row row) {
         //Lógica criada pois na planilha, as audiencias que possuem assunto "Rural"
         // sem ser "Aposentadoria Rural (Art. 48/51)" são na verdade Salario Maternidade
-        String assunto = row.getCell(4).getStringCellValue();
+        String assunto = row.getCell(6).getStringCellValue();
         if (assunto.equals(RURAL.trim())) {
             return SALARIO_MATERNIDADE;
         }
