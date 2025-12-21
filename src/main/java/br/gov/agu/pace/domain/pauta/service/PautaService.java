@@ -181,6 +181,19 @@ public class PautaService {
 
     public PautaDTO buscarPautaPorId(Long id) {
         PautaEntity pauta = pautaRepository.buscarPorId(id);
-        return pautaMapper.toResponseDto(pauta);
+
+        var response = pautaMapper.toResponseDto(pauta);
+
+        if (pauta.isPossuiNovaAudiencia()){
+
+            pauta.getAudiencias().stream()
+                    .filter(AudienciaEntity::isNovaAudiencia)
+                    .forEach(a -> a.setNovaAudiencia(false));
+            pauta.setPossuiNovaAudiencia(false);
+            pautaRepository.save(pauta);
+
+        }
+
+        return response;
     }
 }
