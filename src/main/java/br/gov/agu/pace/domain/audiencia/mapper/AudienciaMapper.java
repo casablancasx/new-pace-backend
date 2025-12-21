@@ -4,6 +4,7 @@ import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
 import br.gov.agu.pace.domain.audiencia.dtos.AudienciaResponseDTO;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
+import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
 import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
@@ -28,6 +29,7 @@ public class AudienciaMapper {
         entity.setAssunto(assunto);
         entity.setPauta(pauta);
         entity.setAdvogados(advogados);
+        entity.setAnaliseAvaliador(RespostaAnaliseAvaliador.ANALISE_PENDENTE);
         entity.setStatusCadastroTarefaAvaliador(StatusCadastroTarefa.PENDENTE);
         entity.setStatusCadastroTarefaPautista(StatusCadastroTarefa.PENDENTE);
         

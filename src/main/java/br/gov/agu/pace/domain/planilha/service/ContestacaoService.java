@@ -14,6 +14,7 @@ import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static br.gov.agu.pace.domain.enums.TipoContestacao.SEM_CONTESTACAO;
 import static br.gov.agu.pace.domain.enums.TipoContestacao.SEM_TIPO;
 
 @Service
@@ -27,12 +28,19 @@ public class ContestacaoService {
 
     public AudienciaDTO adicionarTipoContestacaoEProcessoId(AudienciaDTO audienciaDTO, String token) {
         Long processoId = sapiensClient.getProcessoIdPorNumeroProcosso(audienciaDTO.getNumeroProcesso(), token);
-        String conteudoContestacao = obterConteudoContestacaoPorProcessoId(processoId, token);
-        TipoContestacao tipoContestacao = extrairTipoContestacao(conteudoContestacao);
-        System.out.println(audienciaDTO.getNumeroProcesso() + " - " + tipoContestacao);
-        audienciaDTO.setTipoContestacao(tipoContestacao);
         audienciaDTO.setProcessoId(processoId);
-        return audienciaDTO;
+        try{
+            String conteudoContestacao = obterConteudoContestacaoPorProcessoId(processoId, token);
+            TipoContestacao tipoContestacao = extrairTipoContestacao(conteudoContestacao);
+            System.out.println(audienciaDTO.getNumeroProcesso() + " - " + tipoContestacao);
+            audienciaDTO.setTipoContestacao(tipoContestacao);
+            return audienciaDTO;
+        }catch (Exception e){
+            audienciaDTO.setTipoContestacao(SEM_CONTESTACAO);
+            return audienciaDTO;
+        }
+
+
     }
 
     private TipoContestacao extrairTipoContestacao(String conteudoContestacao) {

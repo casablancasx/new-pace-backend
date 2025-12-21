@@ -8,10 +8,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@EqualsAndHashCode(callSuper = false)
 public class PautaResponseDTO extends PautaDTO{
     private Long pautaId;
-
     private List<AudienciaResponseDTO> audiencias;
 }
