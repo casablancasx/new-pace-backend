@@ -3,6 +3,7 @@ package br.gov.agu.pace.domain.audiencia.entity;
 import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
 import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;
+import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
 import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
@@ -12,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -48,7 +50,10 @@ public class AudienciaEntity {
     @Enumerated(EnumType.STRING)
     private TipoContestacao tipoContestacao;
 
-    private String analise;
+    @Enumerated(EnumType.STRING)
+    private RespostaAnaliseAvaliador analiseAvaliador;
+
+    private String observacao;
 
     @Enumerated(EnumType.STRING)
     private StatusCadastroTarefa statusCadastroTarefaAvaliador;

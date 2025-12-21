@@ -6,6 +6,8 @@ import br.gov.agu.pace.domain.enums.Uf;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,5 +42,8 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             @Param("orgaoJulgadorIds") List<Long> orgaoJulgadorIds,
             @Param("tiposContestacao") List<TipoContestacao> tiposContestacao);
 
+    @Query("SELECT p FROM PautaEntity p " +
+            "WHERE (:orgaoJulgadorId IS NULL OR p.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId)")
+    Page<PautaEntity> listarPautas(@Param("orgaoJulgadorId") Long orgaoJulgadorId, Pageable pageable);
 }
 

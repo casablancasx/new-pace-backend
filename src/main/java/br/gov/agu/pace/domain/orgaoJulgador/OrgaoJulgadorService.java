@@ -29,8 +29,8 @@ public class OrgaoJulgadorService {
     }
 
 
-    public Page<OrgaoJulgadorEntity> listarOrgaosJulgadores(int pageNumber, int pageSize, String nome, String order, String sort) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(order, sort));
+    public Page<OrgaoJulgadorEntity> listarOrgaosJulgadores(int pageNumber, int pageSize, String nome, String order, Sort.Direction sort) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sort, order));
         return repository.buscarOrgaoJulgadores(nome,pageable);
     }
 }

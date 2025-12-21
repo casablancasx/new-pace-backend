@@ -21,6 +21,10 @@ import br.gov.agu.pace.domain.uf.UfService;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -166,5 +170,15 @@ public class PautaService {
         }
         
         return alterada;
+    }
+
+    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort, orderBy));
+        return pautaRepository.listarPautas(orgaoJulgadorId,pageable);
+    }
+
+    public PautaDTO buscarPautaPorId(Long id) {
+        PautaEntity pauta = pautaRepository.findById(id).orElseThrow();
+        return pautaMapper.toResponseDto(pauta);
     }
 }

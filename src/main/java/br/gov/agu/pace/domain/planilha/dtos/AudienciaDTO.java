@@ -17,6 +17,8 @@ import java.util.List;
 @EqualsAndHashCode
 public class AudienciaDTO {
 
+    private Long audienciaId;
+
     private String numeroProcesso;
 
     private LocalDate data;

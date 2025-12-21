@@ -5,6 +5,7 @@ import br.gov.agu.pace.domain.enums.StatusEscalaPauta;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -45,15 +46,9 @@ public class PautaEntity {
     @Enumerated(EnumType.STRING)
     private Turno turno;
 
-    @Column(name = "status_escala_avaliador")
-    @Enumerated(EnumType.STRING)
-    private StatusEscalaPauta statusEscalaAvaliador;
 
-    @Column(name = "status_escala_pautista")
-    @Enumerated(EnumType.STRING)
-    private StatusEscalaPauta statusEscalaPautista;
-
-    @OneToMany(mappedBy = "pauta")
+    @JsonIgnore
+    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AudienciaEntity> audiencias;
 
     //Flag para identificar se houve adicao de uma nova audiencia em uma pauta existente
@@ -62,13 +57,19 @@ public class PautaEntity {
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
 
+    public String getTurno(){
+        return this.turno.getDescricao();
+    }
 
+
+    @JsonIgnore
     public Long getTotalAudienciasCadastradasComSucesso(){
         return audiencias.stream()
                 .filter(a -> SUCESSO.equals(a.getStatusCadastroTarefaAvaliador()))
                 .count();
     }
 
+    @JsonIgnore
     public Long getTotalAudienciasCadastradasComErro(){
         return audiencias.stream()
                 .filter(a -> ERRO.equals(a.getStatusCadastroTarefaAvaliador()))

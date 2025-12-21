@@ -2,6 +2,7 @@ package br.gov.agu.pace.domain.orgaoJulgador;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class OrgaoJulgadorController {
     public ResponseEntity<Page<OrgaoJulgadorEntity>> listarOrgaoJulgadores(
             @RequestParam(required = false) String nome,
             @RequestParam(defaultValue = "false") String orderBy,
-            @RequestParam(defaultValue = "asc") String sort,
+            @RequestParam(defaultValue = "asc") Sort.Direction sort,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 

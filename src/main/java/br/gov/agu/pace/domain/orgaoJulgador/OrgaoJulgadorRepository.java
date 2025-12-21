@@ -16,6 +16,6 @@ public interface OrgaoJulgadorRepository extends JpaRepository<OrgaoJulgadorEnti
     Optional<OrgaoJulgadorEntity> findByNome(String nome);
 
 
-    @Query("SELECT o FROM OrgaoJulgadorEntity o WHERE (:nome IS NULL OR o.nome LIKE CONCAT('%', :nome, '%'))")
+    @Query("SELECT o FROM OrgaoJulgadorEntity o WHERE (:nome IS NULL OR LOWER(o.nome) LIKE LOWER(CONCAT('%', :nome, '%')))")
     Page<OrgaoJulgadorEntity> buscarOrgaoJulgadores(@Param("nome") String nome, Pageable pageable);
 }

@@ -10,7 +10,7 @@ public enum Turno {
         this.descricao = descricao;
     }
 
-    private String getDescricao() {
+    public String getDescricao() {
         return descricao;
     }
 }

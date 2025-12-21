@@ -2,14 +2,12 @@ package br.gov.agu.pace.domain.pauta.dtos;
 
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.enums.Uf;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,4 +23,7 @@ public class PautaDTO {
 
     private Uf uf;
 
+    public LocalDate getData() {
+        return data;
+    }
 }
