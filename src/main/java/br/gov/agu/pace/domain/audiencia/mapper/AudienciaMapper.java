@@ -10,6 +10,7 @@ import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Component
@@ -28,7 +29,7 @@ public class AudienciaMapper {
         entity.setTipoContestacao(dto.getTipoContestacao());
         entity.setAssunto(assunto);
         entity.setPauta(pauta);
-        entity.setAdvogados(advogados);
+        entity.setAdvogados(new LinkedHashSet<>(advogados));
         entity.setAnaliseAvaliador(RespostaAnaliseAvaliador.ANALISE_PENDENTE);
         entity.setStatusCadastroTarefaAvaliador(StatusCadastroTarefa.PENDENTE);
         entity.setStatusCadastroTarefaPautista(StatusCadastroTarefa.PENDENTE);
@@ -54,8 +55,8 @@ public class AudienciaMapper {
         responseDTO.setTipoContestacao(entity.getTipoContestacao().getDescricao());
         responseDTO.setAnaliseAvaliador(entity.getAnaliseAvaliador().getDescricao());
         responseDTO.setObservacao(entity.getObservacao());
-        responseDTO.setPautista(entity.getPautista().getNome());
-        responseDTO.setAvaliador(entity.getAvaliador().getNome());
+        responseDTO.setPautista(entity.getPautista() != null ? entity.getPautista().getNome() : "");
+        responseDTO.setAvaliador(entity.getAvaliador() != null ? entity.getAvaliador().getNome() : "");
         return responseDTO;
 
 

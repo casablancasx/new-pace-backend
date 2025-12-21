@@ -45,5 +45,11 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
     @Query("SELECT p FROM PautaEntity p " +
             "WHERE (:orgaoJulgadorId IS NULL OR p.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId)")
     Page<PautaEntity> listarPautas(@Param("orgaoJulgadorId") Long orgaoJulgadorId, Pageable pageable);
+
+    @Query("SELECT p FROM PautaEntity p " +
+            "LEFT JOIN FETCH p.audiencias a " +
+            "LEFT JOIN FETCH a.advogados ad " +
+            "WHERE p.pautaId = :id")
+    PautaEntity buscarPorId(Long id);
 }
 

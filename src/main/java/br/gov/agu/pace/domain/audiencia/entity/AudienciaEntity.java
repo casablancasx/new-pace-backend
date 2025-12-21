@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_audiencias")
@@ -41,7 +42,7 @@ public class AudienciaEntity {
             joinColumns = @JoinColumn(name = "audiencia_id"),
             inverseJoinColumns = @JoinColumn(name = "advogado_id")
     )
-    private List<AdvogadoEntity> advogados;
+        private Set<AdvogadoEntity> advogados = new LinkedHashSet<>();
 
     private String horario;
 

@@ -51,7 +51,7 @@ public class PautaService {
     public Map<PautaDTO, List<AudienciaDTO>> agruparAudienciasPorPauta(Set<AudienciaDTO> audiencias) {
         return audiencias.stream()
                 .collect(Collectors.groupingBy(
-                        a -> new PautaDTO(a.getData(), a.getTurno(), a.getSala(), a.getOrgaoJulgador(), a.getUf())
+                        a -> new PautaDTO(a.getData(), a.getTurno().getDescricao(), a.getSala(), a.getOrgaoJulgador(), a.getUf())
                 ));
     }
 
@@ -79,7 +79,7 @@ public class PautaService {
                     pautaDTO.getOrgaoJulgador(), uf);
             
             // Verificar se a pauta já existe
-            PautaEntity pauta = buscarPautaExistente(pautaDTO.getData(), pautaDTO.getTurno(), sala, orgaoJulgador);
+            PautaEntity pauta = buscarPautaExistente(pautaDTO.getData(), Turno.valueOf(pautaDTO.getTurno()), sala, orgaoJulgador);
             
             boolean isPautaNova = (pauta == null);
             if (isPautaNova) {
@@ -146,6 +146,8 @@ public class PautaService {
     private boolean atualizarAudienciaSeNecessario(AudienciaEntity audiencia, AudienciaDTO dto,
                                                     AssuntoEntity assunto, List<AdvogadoEntity> advogados) {
         boolean alterada = false;
+
+        Set<AdvogadoEntity> advogadosSet = new LinkedHashSet<>(advogados);
         
         if (!Objects.equals(audiencia.getNomeParte(), dto.getPoloAtivo())) {
             audiencia.setNomeParte(dto.getPoloAtivo());
@@ -164,8 +166,8 @@ public class PautaService {
             audiencia.setAssunto(assunto);
             alterada = true;
         }
-        if (!Objects.equals(audiencia.getAdvogados(), advogados)) {
-            audiencia.setAdvogados(advogados);
+        if (!Objects.equals(audiencia.getAdvogados(), advogadosSet)) {
+            audiencia.setAdvogados(advogadosSet);
             alterada = true;
         }
         
@@ -178,7 +180,7 @@ public class PautaService {
     }
 
     public PautaDTO buscarPautaPorId(Long id) {
-        PautaEntity pauta = pautaRepository.findById(id).orElseThrow();
+        PautaEntity pauta = pautaRepository.buscarPorId(id);
         return pautaMapper.toResponseDto(pauta);
     }
 }

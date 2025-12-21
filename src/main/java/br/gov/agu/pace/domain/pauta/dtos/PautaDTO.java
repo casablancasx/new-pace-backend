@@ -16,7 +16,7 @@ public class PautaDTO {
 
     private LocalDate data;
 
-    private Turno turno;
+    private String turno;
 
     private String sala;
 

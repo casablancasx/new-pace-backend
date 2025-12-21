@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.pauta.mapper;
 
 import br.gov.agu.pace.domain.audiencia.mapper.AudienciaMapper;
+import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
 import br.gov.agu.pace.domain.pauta.dtos.PautaResponseDTO;
@@ -18,7 +19,7 @@ public class PautaMapper {
     public PautaEntity toEntity(PautaDTO dto, SalaEntity sala, OrgaoJulgadorEntity orgaoJulgador) {
         PautaEntity entity = new PautaEntity();
         entity.setData(dto.getData());
-        entity.setTurno(dto.getTurno());
+        entity.setTurno(Turno.valueOf(dto.getTurno()));
         entity.setSala(sala);
         entity.setOrgaoJulgador(orgaoJulgador);
         return entity;
@@ -27,6 +28,7 @@ public class PautaMapper {
     public PautaResponseDTO toResponseDto(PautaEntity pautaEntity){
         PautaResponseDTO responseDto = new PautaResponseDTO();
         responseDto.setPautaId(pautaEntity.getPautaId());
+        responseDto.setTurno(pautaEntity.getTurno());
         responseDto.setData(pautaEntity.getData());
         responseDto.setSala(pautaEntity.getSala().getNome());
         responseDto.setOrgaoJulgador(pautaEntity.getOrgaoJulgador().getNome());
