@@ -13,6 +13,4 @@ public class SetorDTO {
     private String nomeSetor;
     private Long unidadeId;
     private String nomeUnidade;
-
-
 }

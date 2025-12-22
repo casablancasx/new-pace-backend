@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.unidade;
 
 import br.gov.agu.pace.domain.user.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class UnidadeEntity {
     private String nome;
 
     @OneToMany(mappedBy = "unidade")
+    @JsonIgnore
     private Set<UserEntity> usuarios = new HashSet<>();
 
     public UnidadeEntity(Long unidadeId, String nome) {

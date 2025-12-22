@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.setor;
 
 import br.gov.agu.pace.domain.user.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -27,6 +28,7 @@ public class SetorEntity {
     private String nome;
 
     @OneToMany(mappedBy = "setor")
+    @JsonIgnore
     private Set<UserEntity> usuarios = new HashSet<>();
 
     public SetorEntity(Long setorId, String nome) {
