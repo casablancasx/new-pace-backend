@@ -5,6 +5,9 @@ import br.gov.agu.pace.domain.setor.SetorService;
 import br.gov.agu.pace.domain.unidade.UnidadeEntity;
 import br.gov.agu.pace.domain.unidade.UnidadeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -39,5 +42,10 @@ public class AvaliadorService {
         avaliador.setUnidade(unidade);
         return repository.save(avaliador);
 
+    }
+
+    public Page<AvaliadorEntity> listarAvaliadores(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findAll(pageable);
     }
 }

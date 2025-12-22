@@ -4,9 +4,8 @@ import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.user.SapiensUser;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,10 +30,12 @@ public class AvaliadorEntity extends SapiensUser {
 
     private boolean disponivel = true;
 
-    @OneToMany(mappedBy = "avaliador")
+    @JsonIgnore
+    @OneToMany(mappedBy = "avaliador", fetch = FetchType.EAGER)
     private List<AudienciaEntity> audiencias = new ArrayList<>();
 
 
+    @JsonIgnore
     public int calcularCargaTrabalho() {
         final int PESO_PAUTA = 1;
         final int PESO_AUDIENCIA = 2;
@@ -45,6 +46,7 @@ public class AvaliadorEntity extends SapiensUser {
         this.quantidadePautas++;
     }
 
+    @JsonIgnore
     public void incrementarAudiencias(List<AudienciaEntity> audiencias) {
         quantidadeAudiencias += audiencias.size();
     }

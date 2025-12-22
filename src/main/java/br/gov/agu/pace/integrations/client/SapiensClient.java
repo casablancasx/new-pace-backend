@@ -178,7 +178,7 @@ public class SapiensClient {
         body.put("especieTarefa", especieTarefaId); // Espécie Tarefa
         body.put("usuarioResponsavel", user.getSapiensId()); //Quem vai receber a tarefa
         body.put("setorOrigem", setorOrigemId);
-        body.put("setorResponsavel", user.getSapiensId());
+        body.put("setorResponsavel", user.getSetor().getSetorId());
         body.put("distribuicaoAutomatica", false);
         body.put("folder", null);
         body.put("prazoDias", ChronoUnit.DAYS.between(LocalDateTime.now(), pauta.getData().atTime(23, 59, 59)));
