@@ -194,6 +194,7 @@ public class SapiensClient {
 
         return restClient.post()
                 .uri("/v1/administrativo/tarefa")
+                .body(body)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .toEntity(JsonNode.class)

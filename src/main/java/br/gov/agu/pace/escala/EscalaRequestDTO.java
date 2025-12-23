@@ -18,8 +18,6 @@ public class EscalaRequestDTO {
 
     private Long setorOrigemId;
 
-    private Long setorResponsavelId;
-
     private Long especieTarefaId;
 
     private LocalDate dataInicio;
