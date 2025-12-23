@@ -49,7 +49,7 @@ public class AudienciaMapper {
         responseDTO.setHorario(entity.getHorario());
         responseDTO.setData(entity.getPauta().getData());
         responseDTO.setNomeParte(entity.getNomeParte());
-        responseDTO.setAdvogados(entity.getAdvogados().stream().map(AdvogadoEntity::getNome).toList());
+        responseDTO.setAdvogados(entity.getAdvogados());
         responseDTO.setAssunto(entity.getAssunto().getNome());
         responseDTO.setNovaAudiencia(entity.isNovaAudiencia());
         responseDTO.setTipoContestacao(entity.getTipoContestacao().getDescricao());

@@ -8,16 +8,17 @@ import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pautista.PautistaEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,13 +37,14 @@ public class AudienciaEntity {
 
     private String nomeParte;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tb_audiencia_advogado",
             joinColumns = @JoinColumn(name = "audiencia_id"),
             inverseJoinColumns = @JoinColumn(name = "advogado_id")
     )
-        private Set<AdvogadoEntity> advogados = new LinkedHashSet<>();
+    private Set<AdvogadoEntity> advogados = new LinkedHashSet<>();
 
     private String horario;
 
@@ -85,6 +87,10 @@ public class AudienciaEntity {
 
     @Column(name = "processo_id")
     private Long processoId;
+
+    public List<String> getAdvogados(){
+        return advogados.stream().map(AdvogadoEntity::getNome).toList();
+    }
 
 
 }
