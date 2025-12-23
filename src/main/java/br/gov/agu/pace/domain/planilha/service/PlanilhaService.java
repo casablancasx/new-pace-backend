@@ -11,6 +11,8 @@ import br.gov.agu.pace.domain.planilha.entity.PlanilhaEntity;
 import br.gov.agu.pace.domain.planilha.repository.PlanilhaRepository;
 import br.gov.agu.pace.domain.planilha.util.FileHashUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,21 +31,24 @@ public class PlanilhaService {
 
     public PlanilhaDTO importarPlanilha(MultipartFile file, String token) throws Exception {
         PlanilhaEntity planilha = new PlanilhaEntity();
+
         planilha.setNomeArquivo(file.getOriginalFilename());
         String hash = FileHashUtil.getFileHash(file, "SHA-256");
         planilha.setHash(hash);
         UserFromTokenDTO userFromToken = tokenService.getUserFromToken(token);
         userRepository.findById(userFromToken.getSapiensId()).ifPresent(planilha::setUsuario);
-        planilhaRepository.save(planilha);
-
 
         Set<AudienciaDTO> audiencias = excelReaderService.importarPlanilha(file);
+        var pautas = pautaService.agruparAudienciasPorPauta(audiencias);
 
+        planilha.setPautas(pautas.size());
+        planilha.setAudiencias(audiencias.size());
+        planilhaRepository.save(planilha);
         async.processarAudiencias(token, audiencias, planilha);
 
 
 
-        var pautas = pautaService.agruparAudienciasPorPauta(audiencias);
+
 
         return PlanilhaDTO.builder()
                 .message("Planilha importada com sucesso")
@@ -54,5 +59,7 @@ public class PlanilhaService {
     }
 
 
-
+    public Page<PlanilhaEntity> listarPlanilhas(int page, int size) {
+        return planilhaRepository.findAll(PageRequest.of(page, size));
+    }
 }

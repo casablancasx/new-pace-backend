@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.planilha.entity;
 
 import br.gov.agu.pace.domain.user.UserEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class PlanilhaEntity {
 
     @ManyToOne
     @JoinColumn(name = "upload_pelo_id", nullable = false)
+    @JsonIgnore
     private UserEntity usuario;
 
     private boolean processamentoConcluido = false;
@@ -43,4 +45,8 @@ public class PlanilhaEntity {
     private int audiencias;
 
     private int pautas;
+
+    public String getUsuario(){
+        return usuario.getNome();
+    }
 }
