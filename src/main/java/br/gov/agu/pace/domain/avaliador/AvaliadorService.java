@@ -26,7 +26,7 @@ public class AvaliadorService {
 
     public AvaliadorEntity selecionarAvaliador(final List<AvaliadorEntity> avaliadores) {
         return avaliadores.stream()
-                .min(Comparator.comparingInt(AvaliadorEntity::calcularCargaTrabalho))
+                .min(Comparator.comparingLong(AvaliadorEntity::calcularCargaTrabalho))
                 .orElseThrow(() -> new RuntimeException("Nenhum avaliador disponivel para escala"));
     }
 

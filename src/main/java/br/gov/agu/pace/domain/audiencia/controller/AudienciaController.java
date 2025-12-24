@@ -1,6 +1,8 @@
 package br.gov.agu.pace.domain.audiencia.controller;
 
+import br.gov.agu.pace.domain.audiencia.dtos.AnalisarAudienciaDTO;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
+import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.audiencia.service.AudienciaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,11 +31,13 @@ public class AudienciaController {
         return ResponseEntity.ok(audiencias);
     }
 
-    @PatchMapping
-    public ResponseEntity<AudienciaEntity> atualizarAudiencia(
-           @RequestBody AudienciaEntity audienciaAtualizada
+    @PutMapping("/analisar-audiencia")
+    public ResponseEntity<AudienciaEntity> analisarAudiencia(
+           @RequestBody AnalisarAudienciaDTO data,
+           @RequestHeader("Authorization") String token
     ) {
-        AudienciaEntity audiencia = audienciaService.atualizarAudiencia(audienciaAtualizada);
+        token = token.replace("Bearer ", "");
+        AudienciaEntity audiencia = audienciaService.analisarAudiencia(data,token);
         return ResponseEntity.ok(audiencia);
     }
 }

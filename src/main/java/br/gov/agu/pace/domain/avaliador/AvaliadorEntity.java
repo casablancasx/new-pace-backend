@@ -24,9 +24,11 @@ public class AvaliadorEntity extends SapiensUser {
 
     private String telefone;
 
-    private Integer quantidadePautas = 0;
+    private Long quantidadePautas = 0L;
 
-    private Integer quantidadeAudiencias = 0;
+    private Long quantidadeAudiencias = 0L;
+
+    private Long quantidadeAudienciasAvaliadas = 0L;
 
     private boolean disponivel = true;
 
@@ -36,7 +38,7 @@ public class AvaliadorEntity extends SapiensUser {
 
 
     @JsonIgnore
-    public int calcularCargaTrabalho() {
+    public Long calcularCargaTrabalho() {
         final int PESO_PAUTA = 1;
         final int PESO_AUDIENCIA = 2;
         return (quantidadePautas * PESO_PAUTA) + (quantidadeAudiencias * PESO_AUDIENCIA);
@@ -61,4 +63,7 @@ public class AvaliadorEntity extends SapiensUser {
         return (long) audiencias.size();
     }
 
+    public void incrementarQuantidadeAudienciasAnalisadas() {
+        quantidadeAudienciasAvaliadas++;
+    }
 }

@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 
 import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.ERRO;
 import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.SUCESSO;
@@ -49,7 +50,7 @@ public class PautaEntity {
 
     @JsonIgnore
     @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<AudienciaEntity> audiencias;
+    private Set<AudienciaEntity> audiencias;
 
 
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
