@@ -166,7 +166,7 @@ public class SapiensClient {
         body.put("postIt", null);
         body.put("urgente", null);
         body.put("observacao", String.format("%s - %s - %s - %s",
-                audiencia.getTipoContestacao() != null ? audiencia.getTipoContestacao() : "N/A",
+                audiencia.getTipoContestacao().getDescricao() != null ? audiencia.getTipoContestacao() : "N/A",
                 pauta.getData() != null ? pauta.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A",
                 pauta.getOrgaoJulgador() != null ? pauta.getOrgaoJulgador().getNome() : "N/A",
                 pauta.getTurno() != null ? pauta.getTurno() : "N/A"));

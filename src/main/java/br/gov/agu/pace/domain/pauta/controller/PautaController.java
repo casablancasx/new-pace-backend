@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.pauta.controller;
 
 
+import br.gov.agu.pace.domain.enums.Uf;
 import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pauta.service.PautaService;
@@ -24,10 +25,10 @@ public class PautaController {
             @RequestParam int size,
             @RequestParam(defaultValue = "criadoEm") String orderBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction sort,
-            @RequestParam(required = false) Long orgaoJulgadorId
-
-    ) {
-        Page<PautaEntity> pautas = pautaService.listarTodas(page,size,orderBy, sort, orgaoJulgadorId);
+            @RequestParam(required = false) Long orgaoJulgadorId,
+            @RequestParam(required = false)Uf uf
+            ) {
+        Page<PautaEntity> pautas = pautaService.listarTodas(page,size,orderBy, sort, orgaoJulgadorId, uf);
         return ResponseEntity.ok(pautas);
     }
 

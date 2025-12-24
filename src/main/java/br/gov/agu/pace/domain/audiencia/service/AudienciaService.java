@@ -19,4 +19,8 @@ public class AudienciaService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, orderBy));
         return repository.listarAudiencias(numeroProcesso,orgaoJulgadorId,pageable);
     }
+
+    public AudienciaEntity atualizarAudiencia(AudienciaEntity audienciaAtualizada) {
+        return repository.save(audienciaAtualizada);
+    }
 }

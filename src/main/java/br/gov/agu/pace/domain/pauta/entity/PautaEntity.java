@@ -48,17 +48,19 @@ public class PautaEntity {
 
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<AudienciaEntity> audiencias;
 
-    //Flag para identificar se houve adicao de uma nova audiencia em uma pauta existente
-    private boolean possuiNovaAudiencia;
 
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
 
     public String getTurno(){
         return this.turno.getDescricao();
+    }
+
+    public boolean isPossuiNovaAudiencia(){
+        return audiencias.stream().filter(a -> a.isNovaAudiencia()).findFirst().isPresent();
     }
 
 

@@ -70,6 +70,7 @@ public class AudienciaEntity {
 
     @ManyToOne
     @JoinColumn(name = "pauta_id")
+    @JsonIgnore
     private PautaEntity pauta;
 
     //Flag para identificar se houve adicao de uma nova audiencia em uma pauta existente

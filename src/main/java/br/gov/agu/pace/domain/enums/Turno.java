@@ -10,6 +10,15 @@ public enum Turno {
         this.descricao = descricao;
     }
 
+    public static Turno fromString(String descricao) {
+        for (Turno turno : Turno.values()) {
+            if (turno.getDescricao().equalsIgnoreCase(descricao)) {
+                return turno;
+            }
+        }
+        throw new IllegalArgumentException("Turno desconhecido: " + descricao);
+    }
+
     public String getDescricao() {
         return descricao;
     }

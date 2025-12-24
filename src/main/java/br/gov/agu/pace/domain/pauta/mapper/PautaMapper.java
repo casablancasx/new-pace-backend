@@ -19,7 +19,7 @@ public class PautaMapper {
     public PautaEntity toEntity(PautaDTO dto, SalaEntity sala, OrgaoJulgadorEntity orgaoJulgador) {
         PautaEntity entity = new PautaEntity();
         entity.setData(dto.getData());
-        entity.setTurno(Turno.valueOf(dto.getTurno()));
+        entity.setTurno(Turno.fromString(dto.getTurno()));
         entity.setSala(sala);
         entity.setOrgaoJulgador(orgaoJulgador);
         return entity;

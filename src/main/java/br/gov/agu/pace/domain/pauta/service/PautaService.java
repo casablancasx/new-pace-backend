@@ -8,6 +8,7 @@ import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.audiencia.mapper.AudienciaMapper;
 import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.enums.Turno;
+import br.gov.agu.pace.domain.enums.Uf;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorService;
 import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
@@ -79,7 +80,7 @@ public class PautaService {
                     pautaDTO.getOrgaoJulgador(), uf);
             
             // Verificar se a pauta já existe
-            PautaEntity pauta = buscarPautaExistente(pautaDTO.getData(), Turno.valueOf(pautaDTO.getTurno()), sala, orgaoJulgador);
+            PautaEntity pauta = buscarPautaExistente(pautaDTO.getData(), Turno.fromString(pautaDTO.getTurno()), sala, orgaoJulgador);
             
             boolean isPautaNova = (pauta == null);
             if (isPautaNova) {
@@ -120,7 +121,6 @@ public class PautaService {
                     // Criar nova audiência
                     audiencia = audienciaMapper.toEntity(audienciaDTO, pautaFinal, assunto, advogados);
                     audiencia.setNovaAudiencia(true);
-                    finalPauta.setPossuiNovaAudiencia(true);
                     audienciasParaSalvar.add(audiencia);
                     log.debug("Nova audiência {} adicionada", audienciaDTO.getNumeroProcesso());
                 }
@@ -174,25 +174,23 @@ public class PautaService {
         return alterada;
     }
 
-    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId) {
+    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId, Uf uf) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, orderBy));
-        return pautaRepository.listarPautas(orgaoJulgadorId,pageable);
+        Page<PautaEntity> pautasPaginadas = pautaRepository.listarPautas(orgaoJulgadorId,uf,pageable);
+        return pautasPaginadas;
     }
 
     public PautaDTO buscarPautaPorId(Long id) {
         PautaEntity pauta = pautaRepository.buscarPorId(id);
-
         var response = pautaMapper.toResponseDto(pauta);
 
         if (pauta.isPossuiNovaAudiencia()){
-
             pauta.getAudiencias().stream()
                     .filter(AudienciaEntity::isNovaAudiencia)
                     .forEach(a -> a.setNovaAudiencia(false));
-            pauta.setPossuiNovaAudiencia(false);
             pautaRepository.save(pauta);
-
         }
+
 
         return response;
     }

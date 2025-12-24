@@ -28,4 +28,12 @@ public class AudienciaController {
         Page<AudienciaEntity> audiencias = audienciaService.listarAudiencias(page, size, numeroProcesso, orgaoJulgadorId, sort, orderBy);
         return ResponseEntity.ok(audiencias);
     }
+
+    @PatchMapping
+    public ResponseEntity<AudienciaEntity> atualizarAudiencia(
+           @RequestBody AudienciaEntity audienciaAtualizada
+    ) {
+        AudienciaEntity audiencia = audienciaService.atualizarAudiencia(audienciaAtualizada);
+        return ResponseEntity.ok(audiencia);
+    }
 }
