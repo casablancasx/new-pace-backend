@@ -32,12 +32,13 @@ public class AudienciaService {
 
     public AudienciaEntity analisarAudiencia(AnalisarAudienciaDTO data,String token) {
         UserFromTokenDTO userFromTokenDTO = tokenService.getUserFromToken(token);
-        AvaliadorEntity avaliador = avaliadorRepository.findById(userFromTokenDTO.getSapiensId()).get();
+        AvaliadorEntity avaliador = avaliadorRepository.findById(userFromTokenDTO.getSapiensId()).orElse(null);
         AudienciaEntity audiencia = repository.findById(data.getAudienciaId()).orElseThrow();
         audiencia.setObservacao(data.getObservacao());
         audiencia.setAnaliseAvaliador(data.getResposta());
 
-        if (!data.getResposta().equals(RespostaAnaliseAvaliador.ANALISE_PENDENTE)){
+        //Permite que ADMIN possa alterar resultado da analise de audiencia sem necessidade de ser um avaliador
+        if (!data.getResposta().equals(RespostaAnaliseAvaliador.ANALISE_PENDENTE) && avaliador != null){
             avaliador.incrementarQuantidadeAudienciasAnalisadas();
             avaliadorRepository.save(avaliador);
         }
