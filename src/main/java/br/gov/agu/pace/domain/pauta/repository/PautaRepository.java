@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
@@ -34,8 +35,8 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             "AND (:ufs IS NULL OR p.orgaoJulgador.uf.sigla IN :ufs) " +
             "AND (:orgaoJulgadorIds IS NULL OR p.orgaoJulgador.orgaoJulgadorId IN :orgaoJulgadorIds) " +
             "AND (:tiposContestacao IS NULL OR a.tipoContestacao IN :tiposContestacao) " +
-            "AND (a.avaliador IS NULL)")
-    List<PautaEntity> buscarPautasSemAvaliadoresEscalados(
+            "AND (p.escala.escalaId IS NULL)")
+    Set<PautaEntity> buscarPautasSemAvaliadoresEscalados(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("ufs") List<Uf> ufs,

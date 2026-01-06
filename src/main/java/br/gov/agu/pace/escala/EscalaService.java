@@ -29,6 +29,7 @@ public class EscalaService {
     @Transactional
     public EscalaResponseDTO escalarAvaliadores(EscalaRequestDTO data, String token){
 
+        EscalaEntity novaEscala = new EscalaEntity();
 
         List<PautaEntity> pautas = pautaRepository.buscarPautasSemAvaliadoresEscalados(
                 data.getDataInicio(),
@@ -58,7 +59,6 @@ public class EscalaService {
                     .toList();
 
 
-            audiencias.forEach(a -> a.setAvaliador(avaliadorSelecionado));
 
             avaliadorSelecionado.incrementarAudiencias(audiencias);
             avaliadorSelecionado.incrementarPautas();

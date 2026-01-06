@@ -55,8 +55,6 @@ public class AudienciaMapper {
         responseDTO.setTipoContestacao(entity.getTipoContestacao().getDescricao());
         responseDTO.setAnaliseAvaliador(entity.getAnaliseAvaliador().getDescricao());
         responseDTO.setObservacao(entity.getObservacao());
-        responseDTO.setPautista(entity.getPautista() != null ? entity.getPautista().getNome() : "");
-        responseDTO.setAvaliador(entity.getAvaliador() != null ? entity.getAvaliador().getNome() : "");
         return responseDTO;
 
 

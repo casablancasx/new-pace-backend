@@ -77,14 +77,6 @@ public class AudienciaEntity {
 
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
-    @ManyToOne
-    @JoinColumn(name = "pautista_id")
-    private PautistaEntity pautista;
-
-    @ManyToOne
-    @JoinColumn(name = "avaliador_id")
-    private AvaliadorEntity avaliador;
-
     @Column(name = "processo_id")
     private Long processoId;
 

@@ -5,6 +5,7 @@ import br.gov.agu.pace.domain.enums.StatusEscalaPauta;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
+import br.gov.agu.pace.escala.EscalaEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,6 +52,10 @@ public class PautaEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AudienciaEntity> audiencias;
+
+    @ManyToOne
+    @JoinColumn(name = "escala_id")
+    private EscalaEntity escala;
 
 
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
