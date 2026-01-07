@@ -2,12 +2,10 @@ package br.gov.agu.pace.integrations.client;
 
 import br.gov.agu.pace.auth.dtos.LoginRequestDTO;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
-import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
-import br.gov.agu.pace.domain.user.SapiensUser;
+import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -15,8 +13,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import tools.jackson.databind.JsonNode;
 
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -158,7 +154,7 @@ public class SapiensClient {
         return conteudo.substring(index + 7);
     }
 
-    public HttpStatusCode cadastrarTarefaSapiens(SapiensUser user, AudienciaEntity audiencia,Long setorOrigemId, Long especieTarefaId, String token) {
+    public HttpStatusCode cadastrarTarefaSapiens(UserEntity user, AudienciaEntity audiencia, Long setorOrigemId, Long especieTarefaId, String token) {
 
         var pauta = audiencia.getPauta();
 

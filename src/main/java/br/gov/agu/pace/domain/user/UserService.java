@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.user;
 
 import br.gov.agu.pace.auth.dtos.UserFromTokenDTO;
+import br.gov.agu.pace.commons.exceptions.UserUnauthorizedException;
 import br.gov.agu.pace.integrations.client.SapiensClient;
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import br.gov.agu.pace.domain.enums.UserRole;
@@ -18,43 +19,43 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UnidadeService unidadeService;
     private final SetorService setorService;
     private final SapiensClient sapiensClient;
-    private final UnidadeService unidadeService;
 
-    public UserEntity buscarOuCriarUsuario(UserFromTokenDTO userFromTokenDTO) {
-        return userRepository.findById(userFromTokenDTO.getSapiensId())
-                .map(this::atualizarUltimoAcesso)
-                .orElseGet(() -> criarNovoUsuario(userFromTokenDTO));
+
+    public UserEntity buscarUsuarioPorSapiensId(Long sapiensId) {
+        return userRepository.findById(sapiensId).map(this::atualizarUltimoAcesso).orElseThrow(
+                () -> new UserUnauthorizedException("Acesso não autorizado. Por favor, entre em contato com o administrador do sistema para solicitar a permissão necessária.")
+        );
     }
+
+
+    public UserEntity cadastrarUsuario(UsuarioSapiensDTO dto, String token, UserRole role){
+        UserEntity avaliador = new UserEntity();
+        avaliador.setNome(dto.getNome());
+        avaliador.setEmail(dto.getEmail());
+        avaliador.setRole(role);
+
+        //Busca informacoes do setor no sapiens
+        SetorDTO dadosSetor = sapiensClient.getInformacoesSetorPorId(
+                dto.getSetor().getSetorId(),
+                token
+        );
+
+        //Vericar se unidade ou setor existem para persistir no banco
+        UnidadeEntity unidade = unidadeService.buscarOuCriarUnidade(dadosSetor.getUnidadeId(), dadosSetor.getNomeUnidade());
+        SetorEntity setor = setorService.buscarOuCriarSetor(dadosSetor.getSetorId(), dadosSetor.getNomeSetor());
+
+        setor.setUnidade(unidade);
+        avaliador.setSetor(setor);
+        return userRepository.save(avaliador);
+    }
+
 
     private UserEntity atualizarUltimoAcesso(UserEntity usuario) {
         usuario.setUltimoAcesso(LocalDateTime.now());
         return userRepository.save(usuario);
     }
 
-    public UserEntity criarNovoUsuario(UserFromTokenDTO userFromTokenDTO) {
-
-        UserEntity novoUsuario = new UserEntity();
-
-        novoUsuario.setSapiensId(userFromTokenDTO.getSapiensId());
-        novoUsuario.setEmail(userFromTokenDTO.getEmail());
-        novoUsuario.setNome(userFromTokenDTO.getNome());
-
-        // Consulta dados no SAPIENS (setor + unidade)
-        SetorDTO dadosSetor = sapiensClient.getInformacoesSetorPorId(
-                userFromTokenDTO.getSetorId(),
-                userFromTokenDTO.getToken()
-        );
-
-        SetorEntity setor = setorService.buscarOuCriarSetorPorId(dadosSetor);
-        novoUsuario.setSetor(setor);
-
-        UnidadeEntity unidade = unidadeService.buscarOuCriarUnidadePorId(dadosSetor);
-        novoUsuario.setUnidade(unidade);
-
-        novoUsuario.setRole(UserRole.USER);
-
-        return userRepository.save(novoUsuario);
-    }
 }

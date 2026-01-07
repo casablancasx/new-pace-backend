@@ -11,10 +11,10 @@ public class SetorService {
     private final SetorRepository setorRepository;
 
 
-    public SetorEntity buscarOuCriarSetorPorId(SetorDTO setorDTO){
+    public SetorEntity buscarOuCriarSetor(Long setorId, String nomeSetor){
 
-        return setorRepository.findById(setorDTO.getSetorId()).orElseGet(
-                () -> criarNovoSetor(setorDTO.getSetorId(), setorDTO.getNomeSetor())
+        return setorRepository.findById(setorId).orElseGet(
+                () -> criarNovoSetor(setorId, nomeSetor)
         );
     }
 

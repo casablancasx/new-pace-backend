@@ -1,11 +1,9 @@
 package br.gov.agu.pace.domain.setor;
 
+import br.gov.agu.pace.domain.unidade.UnidadeEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +24,10 @@ public class SetorEntity {
     private Long setorId;
 
     private String nome;
+
+    @ManyToOne
+    @JoinColumn(name = "unidade_id")
+    private UnidadeEntity unidade;
 
     @OneToMany(mappedBy = "setor")
     @JsonIgnore

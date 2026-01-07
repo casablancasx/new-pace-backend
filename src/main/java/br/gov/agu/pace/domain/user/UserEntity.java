@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.user;
 
+import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.UserRole;
 import br.gov.agu.pace.domain.setor.SetorEntity;
 import jakarta.persistence.*;
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.TimeZone;
 
 @Entity
@@ -34,6 +36,7 @@ public class UserEntity{
     private String telefone;
 
     @ManyToOne
+    @JoinColumn(name = "setor_id")
     private SetorEntity setor;
 
     @Enumerated(EnumType.STRING)
@@ -44,8 +47,20 @@ public class UserEntity{
     private LocalDateTime dataCadastro = LocalDateTime.now(TimeZone.getDefault().toZoneId());
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserMetricEntity metric;
+    private UserMetricEntity metric = new UserMetricEntity();
 
+
+    public void incrementarPautas(){
+        this.metric.setQuantidadePautas(this.metric.getQuantidadePautas() + 1);
+    }
+
+    public void incrementarAudiencias(List<AudienciaEntity> audiencias){
+        this.metric.setQuantidadeAudiencias(this.metric.getQuantidadeAudiencias() + audiencias.size());
+    }
+
+    public void incrementarQuantidadeAudienciasAnalisadas(){
+        this.metric.setQuantidadeAudienciasAvaliadas(this.metric.getQuantidadeAudienciasAvaliadas() + 1);
+    }
 
     public Long calcularCargaTrabalho() {
         final int PESO_PAUTA = 1;

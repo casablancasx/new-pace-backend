@@ -11,10 +11,10 @@ public class UnidadeService {
     private final UnidadeRepository unidadeRepository;
 
 
-    public UnidadeEntity buscarOuCriarUnidadePorId(SetorDTO setorDTO){
+    public UnidadeEntity buscarOuCriarUnidade(Long unidadeId, String nomeUnidade){
 
-        return unidadeRepository.findById(setorDTO.getSetorId()).orElseGet(
-                () -> criarNovoSetor(setorDTO.getUnidadeId(), setorDTO.getNomeUnidade())
+        return unidadeRepository.findById(unidadeId).orElseGet(
+                () -> criarNovoSetor(unidadeId, nomeUnidade)
         );
     }
 

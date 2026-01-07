@@ -33,10 +33,6 @@ public class EscalaEntity {
     @JoinColumn(name = "criador_id")
     private UserEntity criador;
 
-    @ElementCollection
-    @CollectionTable(name = "tb_escala_tipos_contestacao_selecionados", joinColumns = @JoinColumn(name = "escala_id"))
-    private Set<TipoContestacao> tiposSelecionados;
-
     @ManyToOne(optional = false)
     private PautaEntity pauta;
 
@@ -47,6 +43,6 @@ public class EscalaEntity {
     private TipoEscala tipo;
 
     @Enumerated(EnumType.STRING)
-    private StatusEscala status;
+    private StatusEscala status = StatusEscala.ESCALADA;
 
 }

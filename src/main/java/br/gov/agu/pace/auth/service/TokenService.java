@@ -37,6 +37,10 @@ public class TokenService {
                 .get();
     }
 
+    public Long getSapiensIdFromToken(String token){
+        return getUserFromToken(token).getSapiensId();
+    }
+
     public String renovarTokenSeExpirado(String token) {
         DecodedJWT jwt = JWT.decode(token);
 
