@@ -1,9 +1,8 @@
 package br.gov.agu.pace.escala;
 
-import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
+import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
-import br.gov.agu.pace.domain.pautista.PautistaEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,13 +37,16 @@ public class EscalaEntity {
     @CollectionTable(name = "tb_escala_tipos_contestacao_selecionados", joinColumns = @JoinColumn(name = "escala_id"))
     private Set<TipoContestacao> tiposSelecionados;
 
-    @OneToMany(mappedBy = "escala")
-    private Set<PautaEntity> pautas;
+    @ManyToOne(optional = false)
+    private PautaEntity pauta;
 
     @ManyToOne
-    private PautistaEntity pautista;
+    private UserEntity usuario;
 
-    @ManyToOne
-    private AvaliadorEntity avaliador;
+    @Enumerated(EnumType.STRING)
+    private TipoEscala tipo;
+
+    @Enumerated(EnumType.STRING)
+    private StatusEscala status;
 
 }
