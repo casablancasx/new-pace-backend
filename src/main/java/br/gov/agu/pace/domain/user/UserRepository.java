@@ -18,4 +18,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.sapiensId IN :ids AND u.role = :role")
     List<UserEntity> findAllByPorIdAndRole(List<Long> ids, UserRole role);
+
+    @Query("SELECT u FROM UserEntity u WHERE (:nome IS NULL OR LOWER(u.nome) LIKE LOWER(CONCAT('%', :nome, '%')))")
+    Page<UserEntity> buscarTodosUsuarios(String nome, Pageable pageable);
 }
