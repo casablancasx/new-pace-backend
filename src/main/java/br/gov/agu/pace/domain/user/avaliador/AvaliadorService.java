@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.user.avaliador;
 
 import br.gov.agu.pace.commons.exceptions.ResourceNotFoundException;
+import br.gov.agu.pace.domain.pauta.repository.PautaRepository;
 import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.domain.user.UserRepository;
 import br.gov.agu.pace.domain.user.UserService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class AvaliadorService {
     private final UserRepository repository;
     private final UserService userService;
     private final AvaliadorMapper mapper;
+    private final PautaRepository pautaRepository;
 
     public Page<AvaliadorResponseDTO> listarAvaliadores(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

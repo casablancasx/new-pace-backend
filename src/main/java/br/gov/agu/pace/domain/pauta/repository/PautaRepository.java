@@ -43,6 +43,21 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             @Param("orgaoJulgadorIds") List<Long> orgaoJulgadorIds,
             @Param("tiposContestacao") List<TipoContestacao> tiposContestacao);
 
+
+    @Query("SELECT DISTINCT p FROM PautaEntity p " +
+            "LEFT JOIN FETCH p.audiencias a " +
+            "WHERE p.data BETWEEN :dataInicio AND :dataFim " +
+            "AND (:ufs IS NULL OR p.orgaoJulgador.uf.sigla IN :ufs) " +
+            "AND (:orgaoJulgadorIds IS NULL OR p.orgaoJulgador.orgaoJulgadorId IN :orgaoJulgadorIds) " +
+            "AND (:tiposContestacao IS NULL OR a.tipoContestacao IN :tiposContestacao) " +
+            "AND a.analiseAvaliador = br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador.COMPARECER")
+    Set<PautaEntity> buscarTodasPautasSemPautistasEscalados(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
+            @Param("ufs") List<Uf> ufs,
+            @Param("orgaoJulgadorIds") List<Long> orgaoJulgadorIds,
+            @Param("tiposContestacao") List<TipoContestacao> tiposContestacao);
+
     @Query("SELECT p FROM PautaEntity p " +
             "WHERE (:orgaoJulgadorId IS NULL OR p.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId)" +
             "AND (:uf IS NULL OR p.orgaoJulgador.uf.sigla = :uf)")
@@ -55,5 +70,10 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
                 WHERE p.pautaId = :id
             """)
     PautaEntity buscarPorId(Long id);
+
+    @Query("SELECT DISTINCT e.usuario.sapiensId FROM EscalaEntity e " +
+            "WHERE e.pauta.data = :data " +
+            "AND e.tipo = br.gov.agu.pace.domain.enums.TipoEscala.PAUTISTA")
+    List<Long> buscarPautistasEscaladosNaData(@Param("data") LocalDate data);
 }
 

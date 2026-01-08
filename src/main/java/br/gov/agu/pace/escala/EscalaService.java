@@ -11,6 +11,7 @@ import br.gov.agu.pace.domain.user.avaliador.AvaliadorService;
 import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.domain.user.UserRepository;
 import br.gov.agu.pace.domain.user.UserService;
+import br.gov.agu.pace.domain.user.pautista.PautistaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class EscalaService {
 
     private final PautaRepository pautaRepository;
     private final AvaliadorService avaliadorService;
+    private final PautistaService pautistaService;
     private final AudienciaRepository audienciaRepository;
     private final CadastrarTarefaService cadastrarTarefaService;
     private final TokenService tokenService;
@@ -90,5 +92,60 @@ public class EscalaService {
     }
 
 
+    public EscalaResponseDTO escalarPautistas(EscalaRequestDTO dto, String token) {
+        UserEntity criador = userService.buscarUsuarioPorSapiensId(tokenService.getSapiensIdFromToken(token));
+        Set<PautaEntity> pautas = pautaRepository.buscarPautasSemAvaliadoresEscalados(
+                dto.getDataInicio(),
+                dto.getDataFim(),
+                dto.getUfs(),
+                dto.getOrgaoJulgadorIds(),
+                dto.getTipoContestacao()
+        );
 
+        List<UserEntity> pautistas = pautistaService.buscarPautistasPorIds(dto.getPautistaIds());
+
+        for (PautaEntity pauta : pautas) {
+
+            //Gerenciamento de token para situacoes onde usuario selecionar muitas audiencias
+            token = tokenService.renovarTokenSeExpirado(token);
+            String finalToken = token;
+
+            UserEntity avaliadorSelecionado = pautistaService.selecionarPautista(pautistas, pauta.getData());
+
+
+            List<AudienciaEntity> audiencias = pauta.getAudiencias()
+                    .stream()
+                    .filter(a -> dto.getTipoContestacao().contains(a.getTipoContestacao()))
+                    .map(a -> cadastrarTarefaService.cadastrarTarefa(dto.getSetorOrigemId(),dto.getEspecieTarefaId(),avaliadorSelecionado,a, finalToken))
+                    .toList();
+
+
+            avaliadorSelecionado.incrementarAudiencias(audiencias);
+            avaliadorSelecionado.incrementarPautas();
+            userRepository.save(avaliadorSelecionado);
+            audienciaRepository.saveAll(audiencias);
+
+            EscalaEntity novaEscala = new EscalaEntity();
+            novaEscala.setTipo(TipoEscala.PAUTISTA);
+            novaEscala.setCriador(criador);
+            novaEscala.setPauta(pauta);
+            novaEscala.setUsuario(avaliadorSelecionado);
+        }
+
+        Long sucesso = pautas.stream().mapToLong(PautaEntity::getTotalAudienciasCadastradasComSucesso).sum();
+        Long falha = pautas.stream().mapToLong(PautaEntity::getTotalAudienciasCadastradasComErro).sum();
+
+        Long total = sucesso + falha;
+
+        String mensagem = String.format(
+                "Audiências processadas: %d. Tarefas cadastradas: %d. Erro durante cadastro: %d.",
+                total,
+                sucesso,
+                falha
+        );
+
+        return new EscalaResponseDTO(mensagem);
+
+
+    }
 }
