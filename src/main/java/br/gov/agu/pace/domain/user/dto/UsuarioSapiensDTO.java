@@ -1,4 +1,4 @@
-package br.gov.agu.pace.domain.user;
+package br.gov.agu.pace.domain.user.dto;
 
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.AllArgsConstructor;

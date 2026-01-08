@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@ToString(exclude = "user")
+@EqualsAndHashCode(of = "metricId")
 public class UserMetricEntity {
 
     @Id
@@ -20,6 +22,7 @@ public class UserMetricEntity {
     private Long metricId;
 
     @OneToOne(optional = false)
+    @JsonIgnore
     private UserEntity user;
 
     private Long quantidadeAudiencias = 0L;
@@ -27,6 +30,10 @@ public class UserMetricEntity {
     private Long quantidadeAudienciasAvaliadas = 0L;
 
     private LocalDateTime atualizadoEm;
+
+    public UserMetricEntity(UserEntity user) {
+        this.user = user;
+    }
 
 
 

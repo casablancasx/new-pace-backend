@@ -5,10 +5,7 @@ import br.gov.agu.pace.domain.enums.UserRole;
 import br.gov.agu.pace.domain.setor.SetorEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,10 +13,12 @@ import java.util.TimeZone;
 
 @Entity
 @Table(name = "tb_users")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@ToString(exclude = {"setor", "metric"})
+@EqualsAndHashCode(of = "sapiensId")
 public class UserEntity{
 
     @Id
@@ -47,7 +46,11 @@ public class UserEntity{
     private LocalDateTime dataCadastro = LocalDateTime.now(TimeZone.getDefault().toZoneId());
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private UserMetricEntity metric = new UserMetricEntity();
+    private UserMetricEntity metric;
+
+    private boolean disponivel = true;
+
+    private boolean isContaAtiva = true;
 
 
     public void incrementarPautas(){

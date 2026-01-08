@@ -7,12 +7,11 @@ import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pauta.repository.PautaRepository;
-import br.gov.agu.pace.domain.user.AvaliadorService;
+import br.gov.agu.pace.domain.user.avaliador.AvaliadorService;
 import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.domain.user.UserRepository;
 import br.gov.agu.pace.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

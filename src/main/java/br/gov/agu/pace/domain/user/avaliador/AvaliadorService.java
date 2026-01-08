@@ -1,6 +1,11 @@
-package br.gov.agu.pace.domain.user;
+package br.gov.agu.pace.domain.user.avaliador;
 
 import br.gov.agu.pace.commons.exceptions.ResourceNotFoundException;
+import br.gov.agu.pace.domain.user.UserEntity;
+import br.gov.agu.pace.domain.user.UserRepository;
+import br.gov.agu.pace.domain.user.UserService;
+import br.gov.agu.pace.domain.user.dto.AvaliadorResponseDTO;
+import br.gov.agu.pace.domain.user.dto.UsuarioSapiensDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,14 +23,18 @@ public class AvaliadorService {
 
     private final UserRepository repository;
     private final UserService userService;
+    private final AvaliadorMapper mapper;
 
-    public Page<UserEntity> listarAvaliadores(int page, int size) {
+    public Page<AvaliadorResponseDTO> listarAvaliadores(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return repository.findAllByRole(AVALIADOR, pageable);
+        Page<UserEntity> avaliadoresPage = repository.findAllByRole(AVALIADOR, pageable);
+        return avaliadoresPage.map(mapper::mapToResponse);
     }
 
-    public UserEntity cadastrarAvaliador(UsuarioSapiensDTO dto, String token){
-        return userService.cadastrarUsuario(dto, token, AVALIADOR);
+    public AvaliadorResponseDTO cadastrarAvaliador(UsuarioSapiensDTO dto, String token){
+
+        var avaliador = userService.cadastrarUsuario(dto, token, AVALIADOR);
+        return mapper.mapToResponse(avaliador);
     }
 
     public UserEntity selecionarAvaliador(List<UserEntity> avaliadores){

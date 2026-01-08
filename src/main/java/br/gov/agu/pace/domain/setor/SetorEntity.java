@@ -31,10 +31,11 @@ public class SetorEntity {
 
     @OneToMany(mappedBy = "setor")
     @JsonIgnore
-    private Set<UserEntity> usuarios = new HashSet<>();
+    private Set<UserEntity> usuarios;
 
-    public SetorEntity(Long setorId, String nome) {
+    public SetorEntity(Long setorId, String nome, UnidadeEntity unidade) {
         this.setorId = setorId;
         this.nome = nome;
+        this.unidade = unidade;
     }
 }

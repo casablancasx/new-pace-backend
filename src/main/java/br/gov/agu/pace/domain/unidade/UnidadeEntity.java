@@ -1,6 +1,7 @@
 package br.gov.agu.pace.domain.unidade;
 
 import br.gov.agu.pace.domain.setor.SetorEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class UnidadeEntity {
     private String nome;
 
     @OneToMany(mappedBy = "unidade")
-    private Set<SetorEntity> setores = new HashSet<>();
+    private Set<SetorEntity> setores;
 
     public UnidadeEntity(Long unidadeId, String nome) {
         this.unidadeId = unidadeId;

@@ -1,7 +1,7 @@
 package br.gov.agu.pace.domain.user;
 
-import br.gov.agu.pace.auth.dtos.UserFromTokenDTO;
 import br.gov.agu.pace.commons.exceptions.UserUnauthorizedException;
+import br.gov.agu.pace.domain.user.dto.UsuarioSapiensDTO;
 import br.gov.agu.pace.integrations.client.SapiensClient;
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import br.gov.agu.pace.domain.enums.UserRole;
@@ -33,9 +33,11 @@ public class UserService {
 
     public UserEntity cadastrarUsuario(UsuarioSapiensDTO dto, String token, UserRole role){
         UserEntity avaliador = new UserEntity();
+        avaliador.setSapiensId(dto.getSapiensId());
         avaliador.setNome(dto.getNome());
         avaliador.setEmail(dto.getEmail());
         avaliador.setRole(role);
+        avaliador.setMetric(new UserMetricEntity(avaliador));
 
         //Busca informacoes do setor no sapiens
         SetorDTO dadosSetor = sapiensClient.getInformacoesSetorPorId(
@@ -45,9 +47,7 @@ public class UserService {
 
         //Vericar se unidade ou setor existem para persistir no banco
         UnidadeEntity unidade = unidadeService.buscarOuCriarUnidade(dadosSetor.getUnidadeId(), dadosSetor.getNomeUnidade());
-        SetorEntity setor = setorService.buscarOuCriarSetor(dadosSetor.getSetorId(), dadosSetor.getNomeSetor());
-
-        setor.setUnidade(unidade);
+        SetorEntity setor = setorService.buscarOuCriarSetor(dadosSetor.getSetorId(), dadosSetor.getNomeSetor(), unidade);
         avaliador.setSetor(setor);
         return userRepository.save(avaliador);
     }

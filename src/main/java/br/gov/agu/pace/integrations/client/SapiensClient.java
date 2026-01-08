@@ -70,7 +70,7 @@ public class SapiensClient {
                     apiResponse.get("id").asLong(),
                     apiResponse.get("nome").asString(),
                     apiResponse.get("unidade").get("id").asLong(),
-                    apiResponse.get("nome").asString()
+                    apiResponse.get("unidade").get("nome").asString()
             );
 
         } catch (Exception e) {
