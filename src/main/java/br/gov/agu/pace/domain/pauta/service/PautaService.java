@@ -174,9 +174,9 @@ public class PautaService {
         return alterada;
     }
 
-    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId, Uf uf) {
+    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId,Long userId, Uf uf) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, orderBy));
-        Page<PautaEntity> pautasPaginadas = pautaRepository.listarPautas(orgaoJulgadorId,uf,pageable);
+        Page<PautaEntity> pautasPaginadas = pautaRepository.listarPautas(orgaoJulgadorId,userId,uf,pageable);
         return pautasPaginadas;
     }
 

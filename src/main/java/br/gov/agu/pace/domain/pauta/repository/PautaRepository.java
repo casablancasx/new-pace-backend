@@ -59,9 +59,15 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             @Param("tiposContestacao") List<TipoContestacao> tiposContestacao);
 
     @Query("SELECT p FROM PautaEntity p " +
-            "WHERE (:orgaoJulgadorId IS NULL OR p.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId)" +
-            "AND (:uf IS NULL OR p.orgaoJulgador.uf.sigla = :uf)")
-    Page<PautaEntity> listarPautas(@Param("orgaoJulgadorId") Long orgaoJulgadorId, Uf uf, Pageable pageable);
+            "LEFT JOIN p.escala e " +
+            "LEFT JOIN e.usuario u " +
+            "WHERE (:orgaoJulgadorId IS NULL OR p.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId) " +
+            "AND (:uf IS NULL OR p.orgaoJulgador.uf.sigla = :uf) " +
+            "AND (:userId IS NULL OR u.sapiensId = :userId)")
+    Page<PautaEntity> listarPautas(@Param("orgaoJulgadorId") Long orgaoJulgadorId,
+                                   @Param("userId") Long userId,
+                                   @Param("uf") Uf uf,
+                                   Pageable pageable);
 
     @Query("""
                 SELECT DISTINCT p FROM PautaEntity p

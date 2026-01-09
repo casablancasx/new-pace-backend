@@ -26,9 +26,10 @@ public class PautaController {
             @RequestParam(defaultValue = "criadoEm") String orderBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction sort,
             @RequestParam(required = false) Long orgaoJulgadorId,
+            @RequestParam(required = false) Long userId,
             @RequestParam(required = false)Uf uf
             ) {
-        Page<PautaEntity> pautas = pautaService.listarTodas(page,size,orderBy, sort, orgaoJulgadorId, uf);
+        Page<PautaEntity> pautas = pautaService.listarTodas(page,size,orderBy, sort, orgaoJulgadorId,userId, uf);
         return ResponseEntity.ok(pautas);
     }
 

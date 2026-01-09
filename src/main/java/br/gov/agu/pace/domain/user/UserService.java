@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +51,8 @@ public class UserService {
         );
 
         //Vericar se unidade ou setor existem para persistir no banco
-        UnidadeEntity unidade = unidadeService.buscarOuCriarUnidade(dadosSetor.getUnidadeId(), dadosSetor.getNomeUnidade());
-        SetorEntity setor = setorService.buscarOuCriarSetor(dadosSetor.getSetorId(), dadosSetor.getNomeSetor(), unidade);
+        UnidadeEntity unidade = unidadeService.salvarUnidade(dadosSetor.getUnidadeId(), dadosSetor.getNomeUnidade());
+        SetorEntity setor = setorService.salvarSetor(dadosSetor.getSetorId(), dadosSetor.getNomeSetor(), unidade);
         avaliador.setSetor(setor);
         return userRepository.save(avaliador);
     }
