@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SetorDTO {
-
+public class UnidadeDTO {
     private Long id;
     private String nome;
-    private UnidadeDTO unidade;
 }

@@ -11,8 +11,7 @@ public class SetorService {
     private final SetorRepository setorRepository;
 
 
-    public SetorEntity salvarSetor(Long setorId, String nomeSetor, UnidadeEntity unidade){
-        SetorEntity setor = new SetorEntity(setorId, nomeSetor, unidade);
+    public SetorEntity salvarSetor(SetorEntity setor){
         return setorRepository.save(setor);
     }
 

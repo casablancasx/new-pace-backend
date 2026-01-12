@@ -24,7 +24,7 @@ public class UnidadeEntity {
 
     private String nome;
 
-    @OneToMany(mappedBy = "unidade")
+    @OneToMany(mappedBy = "unidade",fetch = FetchType.LAZY)
     private Set<SetorEntity> setores;
 
     public UnidadeEntity(Long unidadeId, String nome) {

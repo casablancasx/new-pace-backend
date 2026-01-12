@@ -3,13 +3,13 @@ package br.gov.agu.pace.domain.user;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.UserRole;
 import br.gov.agu.pace.domain.setor.SetorEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_users")
@@ -34,9 +34,14 @@ public class UserEntity{
     @Column(name = "telefone", nullable = true)
     private String telefone;
 
-    @ManyToOne
-    @JoinColumn(name = "setor_id")
-    private SetorEntity setor;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tb_user_setores",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "setor_id")
+    )
+    @JsonBackReference
+    private Set<SetorEntity> setores = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

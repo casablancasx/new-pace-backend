@@ -23,10 +23,9 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UnidadeService unidadeService;
     private final SetorService setorService;
-    private final SapiensClient sapiensClient;
     private final UserMapper mapper;
+    private final UnidadeService unidadeService;
 
 
     public UserEntity buscarUsuarioPorSapiensId(Long sapiensId) {
@@ -44,16 +43,13 @@ public class UserService {
         avaliador.setRole(role);
         avaliador.setMetric(new UserMetricEntity(avaliador));
 
-        //Busca informacoes do setor no sapiens
-        SetorDTO dadosSetor = sapiensClient.getInformacoesSetorPorId(
-                dto.getSetor().getSetorId(),
-                token
-        );
+        for (SetorDTO setor: dto.getSetores()){
+            UnidadeEntity novaUnidade = unidadeService.salvarUnidade(setor.getUnidade().getId(),setor.getUnidade().getNome());
+            SetorEntity novoSetor = new SetorEntity(setor.getId(), setor.getNome(), novaUnidade);
+            setorService.salvarSetor(novoSetor);
+            avaliador.getSetores().add(novoSetor);
+        }
 
-        //Vericar se unidade ou setor existem para persistir no banco
-        UnidadeEntity unidade = unidadeService.salvarUnidade(dadosSetor.getUnidadeId(), dadosSetor.getNomeUnidade());
-        SetorEntity setor = setorService.salvarSetor(dadosSetor.getSetorId(), dadosSetor.getNomeSetor(), unidade);
-        avaliador.setSetor(setor);
         return userRepository.save(avaliador);
     }
 

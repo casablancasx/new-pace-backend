@@ -53,30 +53,30 @@ public class SapiensClient {
         }
     }
 
-    public SetorDTO getInformacoesSetorPorId(Long setorId, String token) {
-        try {
-            var apiResponse = restClient
-                    .get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/v1/administrativo/setor/{id}")
-                            .queryParam("populate", "[\"unidade\"]")
-                            .build(setorId)
-                    )
-                    .header("Authorization", "Bearer " + token)
-                    .retrieve()
-                    .body(JsonNode.class);
-
-            return new SetorDTO(
-                    apiResponse.get("id").asLong(),
-                    apiResponse.get("nome").asString(),
-                    apiResponse.get("unidade").get("id").asLong(),
-                    apiResponse.get("unidade").get("nome").asString()
-            );
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public SetorDTO getInformacoesSetorPorId(Long setorId, String token) {
+//        try {
+//            var apiResponse = restClient
+//                    .get()
+//                    .uri(uriBuilder -> uriBuilder
+//                            .path("/v1/administrativo/setor/{id}")
+//                            .queryParam("populate", "[\"unidade\"]")
+//                            .build(setorId)
+//                    )
+//                    .header("Authorization", "Bearer " + token)
+//                    .retrieve()
+//                    .body(JsonNode.class);
+//
+//            return new SetorDTO(
+//                    apiResponse.get("id").asLong(),
+//                    apiResponse.get("nome").asString(),
+//                    apiResponse.get("unidade").get("id").asLong(),
+//                    apiResponse.get("unidade").get("nome").asString()
+//            );
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public Long getProcessoIdPorNumeroProcosso(String numeroProcesso, String token) {
         String numeroLimpo = numeroProcesso.replaceAll("[^0-9]", "");
@@ -174,7 +174,7 @@ public class SapiensClient {
         body.put("especieTarefa", especieTarefaId); // Espécie Tarefa
         body.put("usuarioResponsavel", user.getSapiensId()); //Quem vai receber a tarefa
         body.put("setorOrigem", setorOrigemId);
-        body.put("setorResponsavel", user.getSetor().getSetorId());
+        //body.put("setorResponsavel", user.getSetor().getSetorId());
         body.put("distribuicaoAutomatica", false);
         body.put("folder", null);
         body.put("prazoDias", ChronoUnit.DAYS.between(LocalDateTime.now(), pauta.getData().atTime(23, 59, 59)));

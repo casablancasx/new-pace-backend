@@ -1,10 +1,12 @@
 package br.gov.agu.pace.domain.user.dto;
 
+import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,9 +20,7 @@ public class AvaliadorResponseDTO {
 
     private String email;
 
-    private String setor;
-
-    private String unidade;
+    private List<SetorDTO> setores;
 
     private Long quantidadeAudiencias;
 
