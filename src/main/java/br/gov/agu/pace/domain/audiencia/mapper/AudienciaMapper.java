@@ -31,8 +31,7 @@ public class AudienciaMapper {
         entity.setPauta(pauta);
         entity.setAdvogados(new LinkedHashSet<>(advogados));
         entity.setAnaliseAvaliador(RespostaAnaliseAvaliador.ANALISE_PENDENTE);
-        entity.setStatusCadastroTarefaAvaliador(StatusCadastroTarefa.PENDENTE);
-        entity.setStatusCadastroTarefaPautista(StatusCadastroTarefa.PENDENTE);
+
         
         // Audiência é prioritária se houver pelo menos um advogado prioritário
         boolean hasPrioritario = advogados.stream().anyMatch(AdvogadoEntity::isPrioritario);

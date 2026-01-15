@@ -2,9 +2,8 @@ package br.gov.agu.pace.escala;
 
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
-import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
-import br.gov.agu.pace.domain.enums.UserRole;
-
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
+import br.gov.agu.pace.domain.tarefa.TarefaRepository;
 import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.integrations.client.SapiensClient;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +19,21 @@ public class CadastrarTarefaService {
 
     private final SapiensClient sapiensClient;
     private final AudienciaRepository audienciaRepository;
+    private final TarefaRepository tarefaRepository;
 
 
     public AudienciaEntity cadastrarTarefa(Long setorOrigemId, Long especieTarefaId, UserEntity sapiensUser, AudienciaEntity audiencia, String token) {
-        var statusCodeRequisicao = sapiensClient.cadastrarTarefaSapiens(sapiensUser,audiencia,setorOrigemId,especieTarefaId,token);
-        var statusCadastroTarefa = statusCodeRequisicao.is2xxSuccessful() ? SUCESSO : ERRO;
-        atualizarStatus(audiencia, sapiensUser, statusCadastroTarefa);
+        TarefaEntity novaTarefa = new TarefaEntity();
+        Long tarefaId = sapiensClient.cadastrarTarefaSapiens(sapiensUser,audiencia,setorOrigemId,especieTarefaId,token);
+        var statusCadastro = tarefaId != null ? SUCESSO : ERRO;
+        novaTarefa.setTarefaId(tarefaId);
+        novaTarefa.setDestinatario(sapiensUser);
+        novaTarefa.setStatus(statusCadastro);
+        novaTarefa.setAudiencia(audiencia);
+        if (tarefaId != null) {
+            tarefaRepository.save(novaTarefa);
+        }
         return audienciaRepository.save(audiencia);
     }
 
-    private void atualizarStatus(AudienciaEntity audienciaEntity, UserEntity sapiensUser, StatusCadastroTarefa statusCadastro) {
-
-        if (sapiensUser.getRole().equals(UserRole.AVALIADOR)){
-            audienciaEntity.setStatusCadastroTarefaAvaliador(statusCadastro);
-        }
-
-        if (sapiensUser.getRole().equals(UserRole.PAUTISTA)){
-            audienciaEntity.setStatusCadastroTarefaPautista(statusCadastro);
-        }
-    }
 }

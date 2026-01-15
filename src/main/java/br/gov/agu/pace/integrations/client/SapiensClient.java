@@ -7,9 +7,11 @@ import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import tools.jackson.databind.BeanDescription;
 import tools.jackson.databind.JsonNode;
 
 import java.net.URI;
@@ -154,7 +156,9 @@ public class SapiensClient {
         return conteudo.substring(index + 7);
     }
 
-    public HttpStatusCode cadastrarTarefaSapiens(UserEntity user, AudienciaEntity audiencia, Long setorOrigemId, Long especieTarefaId, String token) {
+
+    //Retorna ID da tarefa criada no Sapiens ou null em caso de erro
+    public Long cadastrarTarefaSapiens(UserEntity user, AudienciaEntity audiencia, Long setorOrigemId, Long especieTarefaId, String token) {
 
         var pauta = audiencia.getPauta();
 
@@ -174,7 +178,7 @@ public class SapiensClient {
         body.put("especieTarefa", especieTarefaId); // Espécie Tarefa
         body.put("usuarioResponsavel", user.getSapiensId()); //Quem vai receber a tarefa
         body.put("setorOrigem", setorOrigemId);
-        //body.put("setorResponsavel", user.getSetor().getSetorId());
+        body.put("setorResponsavel", user.getSetores().stream().findFirst().get().getSetorId()); //Setor do usuário
         body.put("distribuicaoAutomatica", false);
         body.put("folder", null);
         body.put("prazoDias", ChronoUnit.DAYS.between(LocalDateTime.now(), pauta.getData().atTime(23, 59, 59)));
@@ -188,13 +192,17 @@ public class SapiensClient {
         body.put("usuarios", null);
         body.put("setores", null);
 
-        return restClient.post()
-                .uri("/v1/administrativo/tarefa")
-                .body(body)
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .toEntity(JsonNode.class)
-                .getStatusCode();
+        try{
+            return restClient.post()
+                    .uri("/v1/administrativo/tarefa")
+                    .body(body)
+                    .header("Authorization", "Bearer " + token)
+                    .retrieve()
+                    .toEntity(JsonNode.class)
+                    .getBody().get("id").asLong();
+        }catch (Exception exception){
+            return null;
+        }
 
     }
 

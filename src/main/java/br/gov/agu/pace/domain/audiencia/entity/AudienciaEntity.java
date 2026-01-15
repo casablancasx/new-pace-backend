@@ -2,10 +2,9 @@ package br.gov.agu.pace.domain.audiencia.entity;
 
 import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
-import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
-import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
-import br.gov.agu.pace.domain.enums.TipoContestacao;
+import br.gov.agu.pace.domain.enums.*;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -56,11 +55,6 @@ public class AudienciaEntity {
 
     private String observacao;
 
-    @Enumerated(EnumType.STRING)
-    private StatusCadastroTarefa statusCadastroTarefaAvaliador;
-
-    @Enumerated(EnumType.STRING)
-    private StatusCadastroTarefa statusCadastroTarefaPautista;
 
     @ManyToOne
     @JoinColumn(name = "assunto_id")
@@ -77,6 +71,15 @@ public class AudienciaEntity {
 
     @Column(name = "processo_id")
     private Long processoId;
+
+    @OneToOne(mappedBy = "audiencia")
+    private TarefaEntity tarefa;
+
+    @Enumerated(EnumType.STRING)
+    private ClasseJudicial classeJudicial;
+
+    @Enumerated(EnumType.STRING)
+    private Subnucleo subnucleo;
 
     public List<String> getAdvogados(){
         return advogados.stream().map(AdvogadoEntity::getNome).toList();

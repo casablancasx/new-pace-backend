@@ -1,7 +1,6 @@
 package br.gov.agu.pace.domain.pauta.entity;
 
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
-import br.gov.agu.pace.domain.enums.StatusEscalaPauta;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
@@ -16,7 +15,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Set;
 
 import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.ERRO;
@@ -73,14 +71,14 @@ public class PautaEntity {
     @JsonIgnore
     public Long getTotalAudienciasCadastradasComSucesso(){
         return audiencias.stream()
-                .filter(a -> SUCESSO.equals(a.getStatusCadastroTarefaAvaliador()))
+                .filter(a ->  a.getTarefa().getStatus().equals(SUCESSO))
                 .count();
     }
 
     @JsonIgnore
     public Long getTotalAudienciasCadastradasComErro(){
         return audiencias.stream()
-                .filter(a -> ERRO.equals(a.getStatusCadastroTarefaAvaliador()))
+                .filter(a -> a.getTarefa().getStatus().equals(ERRO))
                 .count();
     }
 

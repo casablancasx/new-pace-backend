@@ -47,6 +47,9 @@ public class AudienciaService {
         AudienciaEntity audiencia = repository.findById(data.getAudienciaId()).orElseThrow();
         audiencia.setObservacao(data.getObservacao());
         audiencia.setAnaliseAvaliador(data.getResposta());
+        audiencia.setClasseJudicial(data.getClasseJudicial());
+        audiencia.setSubnucleo(data.getSubnucleo());
+        audiencia.setTipoContestacao(data.getTipoContestacao());
 
         if (!data.getResposta().equals(RespostaAnaliseAvaliador.ANALISE_PENDENTE)){
             avaliador.incrementarQuantidadeAudienciasAnalisadas();

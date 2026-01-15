@@ -174,12 +174,15 @@ public class PautaService {
         return alterada;
     }
 
+    @Transactional(readOnly = true)
     public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId,Long userId, Uf uf) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, orderBy));
         Page<PautaEntity> pautasPaginadas = pautaRepository.listarPautas(orgaoJulgadorId,userId,uf,pageable);
         return pautasPaginadas;
     }
 
+
+    @Transactional(readOnly = true)
     public PautaDTO buscarPautaPorId(Long id) {
         PautaEntity pauta = pautaRepository.buscarPorId(id);
         var response = pautaMapper.toResponseDto(pauta);
