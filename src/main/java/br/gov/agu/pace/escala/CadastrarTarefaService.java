@@ -5,6 +5,8 @@ import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import br.gov.agu.pace.domain.tarefa.TarefaRepository;
 import br.gov.agu.pace.domain.user.UserEntity;
+import br.gov.agu.pace.escala.strategy.SetorStrategy;
+import br.gov.agu.pace.escala.strategy.SetorStrategyFactory;
 import br.gov.agu.pace.integrations.client.SapiensClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,16 @@ public class CadastrarTarefaService {
     private final SapiensClient sapiensClient;
     private final AudienciaRepository audienciaRepository;
     private final TarefaRepository tarefaRepository;
+    private final SetorStrategyFactory setorStrategyFactory;
 
 
     public AudienciaEntity cadastrarTarefa(Long setorOrigemId, Long especieTarefaId, UserEntity sapiensUser, AudienciaEntity audiencia, String token) {
         TarefaEntity novaTarefa = new TarefaEntity();
+
+        SetorStrategy strategy = setorStrategyFactory.getStrategy(sapiensUser);
+        Long setorDestinoId = strategy.getSetorId(sapiensUser, especieTarefaId);
+
+
         Long tarefaId = sapiensClient.cadastrarTarefaSapiens(sapiensUser,audiencia,setorOrigemId,especieTarefaId,token);
         var statusCadastro = tarefaId != null ? SUCESSO : ERRO;
         novaTarefa.setTarefaId(tarefaId);
