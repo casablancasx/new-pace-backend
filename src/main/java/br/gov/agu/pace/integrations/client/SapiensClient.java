@@ -2,9 +2,11 @@ package br.gov.agu.pace.integrations.client;
 
 import br.gov.agu.pace.auth.dtos.LoginRequestDTO;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
+import br.gov.agu.pace.domain.enums.Subnucleo;
 import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
 import br.gov.agu.pace.integrations.dtos.SetorDTO;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -54,31 +60,6 @@ public class SapiensClient {
             throw new RuntimeException(e);
         }
     }
-
-//    public SetorDTO getInformacoesSetorPorId(Long setorId, String token) {
-//        try {
-//            var apiResponse = restClient
-//                    .get()
-//                    .uri(uriBuilder -> uriBuilder
-//                            .path("/v1/administrativo/setor/{id}")
-//                            .queryParam("populate", "[\"unidade\"]")
-//                            .build(setorId)
-//                    )
-//                    .header("Authorization", "Bearer " + token)
-//                    .retrieve()
-//                    .body(JsonNode.class);
-//
-//            return new SetorDTO(
-//                    apiResponse.get("id").asLong(),
-//                    apiResponse.get("nome").asString(),
-//                    apiResponse.get("unidade").get("id").asLong(),
-//                    apiResponse.get("unidade").get("nome").asString()
-//            );
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     public Long getProcessoIdPorNumeroProcosso(String numeroProcesso, String token) {
         String numeroLimpo = numeroProcesso.replaceAll("[^0-9]", "");
@@ -205,6 +186,58 @@ public class SapiensClient {
         }
 
     }
+
+
+    public Subnucleo getSubnucleoFromProcesso(Long processoId, String token) {
+
+        String whereParam = String.format(
+                "{\"processo.id\":\"eq:%s\",\"especieTarefa.generoTarefa.nome\":\"eq:JUDICIAL\"}",
+                processoId
+        );
+
+        String orderParam = "{\"dataHoraFinalPrazo\":\"desc\"}";
+
+        URI uri = UriComponentsBuilder
+                .fromUriString("https://supersapiensbackend.agu.gov.br/v1/administrativo/tarefa")
+                .queryParam("where", whereParam)
+                .queryParam("limit", 10)
+                .queryParam("offset", 0)
+                .queryParam("populate", "[\"setorResponsavel\"]")
+                .queryParam("order", orderParam)
+                .build(true) // força encoding correto
+                .toUri();
+
+        var apiResponse = restClient.get()
+                .uri(uri)
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(JsonNode.class);
+
+        List<JsonNode> entities = apiResponse
+                .getBody()
+                .get("entities")
+                .findParents("dataHoraFinalPrazo");
+
+        Pattern pattern = Pattern.compile(
+                "\\((EBI|ESEAS|ERU)\\d*\\)",
+                Pattern.CASE_INSENSITIVE
+        );
+
+        String sigla = entities.stream()
+                .map(node -> node.get("setorResponsavel").get("nome").asText())
+                .map(nomeSetor -> {
+                    Matcher matcher = pattern.matcher(nomeSetor);
+                    return matcher.find()
+                            ? matcher.group(1).toUpperCase()
+                            : null;
+                })
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+
+        return Subnucleo.getSubnucleo(sigla);
+    }
+
 
 
 

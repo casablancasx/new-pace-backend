@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.planilha.mapper;
 
+import br.gov.agu.pace.domain.enums.ClasseJudicial;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.enums.Uf;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
@@ -35,6 +36,7 @@ public class AudienciaRowMapper {
         audienciaDTO.setPoloAtivo(getPoloAtivoFromRow(row));
         audienciaDTO.setSala(getSalaFromRow(row));
         audienciaDTO.setTurno(getTurno(audienciaDTO.getHora()));
+        audienciaDTO.setClasseJudicial(getClasseJudicialFromRow(row));
         return audienciaDTO;
     }
 
@@ -57,6 +59,15 @@ public class AudienciaRowMapper {
 
     private String getNumeroProcessoFromRow(Row row) {
         return row.getCell(1).getStringCellValue();
+    }
+
+    private ClasseJudicial getClasseJudicialFromRow(Row row) {
+        String classeJucialCelll = row.getCell(4).getStringCellValue();
+        classeJucialCelll = classeJucialCelll.toUpperCase().trim();
+        boolean isJudicial = classeJucialCelll.contains("JUIZADO ESPECIAL");
+
+        if (isJudicial) return ClasseJudicial.JEF;
+        else return ClasseJudicial.COMUM;
     }
 
     private String getOrgaoJulgadorFromRow(Row row) {
