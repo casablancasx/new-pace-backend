@@ -139,7 +139,7 @@ public class SapiensClient {
 
 
     //Retorna ID da tarefa criada no Sapiens ou null em caso de erro
-    public Long cadastrarTarefaSapiens(UserEntity user, AudienciaEntity audiencia, Long setorOrigemId, Long especieTarefaId, String token) {
+    public Long cadastrarTarefaSapiens(UserEntity user, AudienciaEntity audiencia, Long setorOrigemId, Long especieTarefaId,Long setorDestino, String token) {
 
         var pauta = audiencia.getPauta();
 
@@ -159,7 +159,7 @@ public class SapiensClient {
         body.put("especieTarefa", especieTarefaId); // Espécie Tarefa
         body.put("usuarioResponsavel", user.getSapiensId()); //Quem vai receber a tarefa
         body.put("setorOrigem", setorOrigemId);
-        body.put("setorResponsavel", user.getSetores().stream().findFirst().get().getSetorId()); //Setor do usuário
+        body.put("setorResponsavel", setorDestino); //Setor do usuário
         body.put("distribuicaoAutomatica", false);
         body.put("folder", null);
         body.put("prazoDias", ChronoUnit.DAYS.between(LocalDateTime.now(), pauta.getData().atTime(23, 59, 59)));

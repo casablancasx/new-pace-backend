@@ -29,10 +29,10 @@ public class CadastrarTarefaService {
         TarefaEntity novaTarefa = new TarefaEntity();
 
         SetorStrategy strategy = setorStrategyFactory.getStrategy(sapiensUser);
-        Long setorDestinoId = strategy.getSetorId(sapiensUser, especieTarefaId);
+        Long setorDestinoId = strategy.getSetorId(sapiensUser, audiencia);
 
 
-        Long tarefaId = sapiensClient.cadastrarTarefaSapiens(sapiensUser,audiencia,setorOrigemId,especieTarefaId,token);
+        Long tarefaId = sapiensClient.cadastrarTarefaSapiens(sapiensUser,audiencia,setorOrigemId,especieTarefaId,setorDestinoId,token);
         var statusCadastro = tarefaId != null ? SUCESSO : ERRO;
         novaTarefa.setTarefaId(tarefaId);
         novaTarefa.setDestinatario(sapiensUser);
