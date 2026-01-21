@@ -1,5 +1,7 @@
 package br.gov.agu.pace.domain.audiencia.dtos;
 
+import br.gov.agu.pace.domain.enums.ClasseJudicial;
+import br.gov.agu.pace.domain.enums.Subnucleo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +41,9 @@ public class AudienciaResponseDTO {
     private String pautista;
 
     private String avaliador;
+
+    private Subnucleo subnucleo;
+
+    private ClasseJudicial classeJudicial;
 
 }

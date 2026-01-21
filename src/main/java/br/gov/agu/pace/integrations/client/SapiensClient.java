@@ -190,22 +190,23 @@ public class SapiensClient {
 
     public Subnucleo getSubnucleoFromProcesso(Long processoId, String token) {
 
-        String whereParam = String.format(
-                "{\"processo.id\":\"eq:%s\",\"especieTarefa.generoTarefa.nome\":\"eq:JUDICIAL\"}",
-                processoId
-        );
+        String whereParam = String.format("where={\"processo.id\":\"eq:%s\",\"especieTarefa.generoTarefa.nome\":\"eq:JUDICIAL\"}",processoId);
+        String limitParam = "limit=100";
+        String offsetParam = "offset=0";
+        String populateParam = "populate=[\"setorResponsavel\",\"setorResponsavel.unidade\"]";
+        String orderParam = "order={\"dataHoraFinalPrazo\":\"desc\"}";
 
-        String orderParam = "{\"dataHoraFinalPrazo\":\"desc\"}";
 
         URI uri = UriComponentsBuilder
                 .fromUriString("https://supersapiensbackend.agu.gov.br/v1/administrativo/tarefa")
-                .queryParam("where", whereParam)
-                .queryParam("limit", 10)
-                .queryParam("offset", 0)
-                .queryParam("populate", "[\"setorResponsavel\"]")
-                .queryParam("order", orderParam)
-                .build(true) // força encoding correto
+                .query(whereParam)
+                .query(limitParam)
+                .query(populateParam)
+                .query(offsetParam)
+                .query(orderParam)
+                .build()
                 .toUri();
+
 
         var apiResponse = restClient.get()
                 .uri(uri)
@@ -213,29 +214,24 @@ public class SapiensClient {
                 .retrieve()
                 .toEntity(JsonNode.class);
 
-        List<JsonNode> entities = apiResponse
-                .getBody()
-                .get("entities")
-                .findParents("dataHoraFinalPrazo");
+        JsonNode entities = apiResponse.getBody().get("entities");
 
-        Pattern pattern = Pattern.compile(
-                "\\((EBI|ESEAS|ERU)\\d*\\)",
-                Pattern.CASE_INSENSITIVE
-        );
-
-        String sigla = entities.stream()
-                .map(node -> node.get("setorResponsavel").get("nome").asText())
-                .map(nomeSetor -> {
-                    Matcher matcher = pattern.matcher(nomeSetor);
-                    return matcher.find()
-                            ? matcher.group(1).toUpperCase()
-                            : null;
-                })
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(null);
-
+        String sigla = null;
+        for (JsonNode entity : entities) {
+            JsonNode setor = entity.get("setorResponsavel");
+            JsonNode unidade = setor.get("unidade");
+            String siglaSetor = unidade.get("sigla").asString();
+            sigla = extrairSubnucleo(siglaSetor);
+            if (sigla != null) break;
+        }
+        
         return Subnucleo.getSubnucleo(sigla);
+    }
+
+    private String extrairSubnucleo(String nomeSetor) {
+        Pattern pattern = Pattern.compile("(EBI|ESEAS|ERU)\\d*", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(nomeSetor);
+        return matcher.find() ? matcher.group(1).toUpperCase() : null;
     }
 
 

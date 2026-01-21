@@ -32,7 +32,6 @@ public class ContestacaoService {
         try{
             String conteudoContestacao = obterConteudoContestacaoPorProcessoId(processoId, token);
             TipoContestacao tipoContestacao = extrairTipoContestacao(conteudoContestacao);
-            System.out.println(audienciaDTO.getNumeroProcesso() + " - " + tipoContestacao);
             audienciaDTO.setTipoContestacao(tipoContestacao);
             return audienciaDTO;
         }catch (Exception e){

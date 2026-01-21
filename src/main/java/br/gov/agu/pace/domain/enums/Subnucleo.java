@@ -1,7 +1,7 @@
 package br.gov.agu.pace.domain.enums;
 
 public enum Subnucleo {
-    ESEAS,EBI,ETRU;
+    ESEAS,EBI,ERU;
 
 
     public static Subnucleo getSubnucleo(String subnucleo) {
@@ -10,8 +10,8 @@ public enum Subnucleo {
                 return ESEAS;
             case "EBI":
                 return EBI;
-            case "ETRU":
-                return ETRU;
+            case "ERU":
+                return ERU;
             default:
                 return null;
         }

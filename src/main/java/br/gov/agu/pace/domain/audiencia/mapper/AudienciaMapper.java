@@ -37,6 +37,9 @@ public class AudienciaMapper {
         boolean hasPrioritario = advogados.stream().anyMatch(AdvogadoEntity::isPrioritario);
         entity.setPrioritaria(hasPrioritario);
         entity.setProcessoId(dto.getProcessoId());
+
+        entity.setClasseJudicial(dto.getClasseJudicial());
+        entity.setSubnucleo(dto.getSubnucleo());
         
         return entity;
     }
@@ -54,6 +57,8 @@ public class AudienciaMapper {
         responseDTO.setTipoContestacao(entity.getTipoContestacao().getDescricao());
         responseDTO.setAnaliseAvaliador(entity.getAnaliseAvaliador().getDescricao());
         responseDTO.setObservacao(entity.getObservacao());
+        responseDTO.setClasseJudicial(entity.getClasseJudicial());
+        responseDTO.setSubnucleo(entity.getSubnucleo());
         return responseDTO;
 
 

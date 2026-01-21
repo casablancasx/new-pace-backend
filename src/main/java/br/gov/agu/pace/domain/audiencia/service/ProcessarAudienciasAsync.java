@@ -34,6 +34,8 @@ public class ProcessarAudienciasAsync {
             audiencia = contestacaoService.adicionarTipoContestacaoEProcessoId(audiencia, token);
             Subnucleo subnucleo = sapiensClient.getSubnucleoFromProcesso(audiencia.getProcessoId(), token);
             audiencia.setSubnucleo(subnucleo);
+
+            System.out.println(audiencia.getNumeroProcesso() + " - " + subnucleo + " - " + audiencia.getTipoContestacao());
         }
         planilha.setProcessamentoConcluido(true);
         planilhaRepository.save(planilha);
