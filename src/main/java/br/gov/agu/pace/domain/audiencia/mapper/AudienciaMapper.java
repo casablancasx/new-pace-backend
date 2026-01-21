@@ -8,6 +8,8 @@ import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
 import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
+import br.gov.agu.pace.domain.user.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashSet;
@@ -44,7 +46,7 @@ public class AudienciaMapper {
         return entity;
     }
 
-    public AudienciaResponseDTO toResponseDTO(AudienciaEntity entity){
+    public AudienciaResponseDTO toResponseDTO(AudienciaEntity entity, UserEntity usuarioSolicitante){
         AudienciaResponseDTO responseDTO = new AudienciaResponseDTO();
         responseDTO.setAudienciaId(entity.getAudienciaId());
         responseDTO.setNumeroProcesso(entity.getNumeroProcesso());
@@ -59,8 +61,15 @@ public class AudienciaMapper {
         responseDTO.setObservacao(entity.getObservacao());
         responseDTO.setClasseJudicial(entity.getClasseJudicial());
         responseDTO.setSubnucleo(entity.getSubnucleo());
+        
+        // Busca a tarefa do usuário solicitante
+        Long tarefaIdDoUsuario = entity.getTarefas().stream()
+                .filter(tarefa -> tarefa.getDestinatario().getSapiensId().equals(usuarioSolicitante.getSapiensId()))
+                .map(TarefaEntity::getTarefaId)
+                .findFirst()
+                .orElse(null);
+        
+        responseDTO.setTarefaId(tarefaIdDoUsuario);
         return responseDTO;
-
-
     }
 }

@@ -3,6 +3,7 @@ package br.gov.agu.pace.domain.user;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.UserRole;
 import br.gov.agu.pace.domain.setor.SetorEntity;
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -52,6 +53,9 @@ public class UserEntity{
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserMetricEntity metric;
+
+    @OneToMany(mappedBy = "destinatario", cascade = CascadeType.ALL)
+    private Set<TarefaEntity> tarefas = new HashSet<>();
 
     private boolean disponivel = true;
 

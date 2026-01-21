@@ -72,8 +72,8 @@ public class AudienciaEntity {
     @Column(name = "processo_id")
     private Long processoId;
 
-    @OneToOne(mappedBy = "audiencia")
-    private TarefaEntity tarefa;
+    @OneToMany(mappedBy = "audiencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TarefaEntity> tarefas = new LinkedHashSet<>();
 
     @Enumerated(EnumType.STRING)
     private ClasseJudicial classeJudicial;

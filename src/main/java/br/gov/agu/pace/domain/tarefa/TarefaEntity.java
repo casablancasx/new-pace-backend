@@ -23,7 +23,8 @@ public class TarefaEntity {
     @Id
     private Long tarefaId;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "audiencia_id")
     private AudienciaEntity audiencia;
 
     @Enumerated(EnumType.STRING)
