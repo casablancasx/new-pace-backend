@@ -31,6 +31,7 @@ public class EscalaService {
     private final TokenService tokenService;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final EscalaRepository escalaRepository;
 
 
     @Transactional
@@ -73,10 +74,8 @@ public class EscalaService {
             novaEscala.setCriador(criador);
             novaEscala.setPauta(pauta);
             novaEscala.setUsuario(avaliadorSelecionado);
+            escalaRepository.save(novaEscala);
         }
-
-
-
 
 
 

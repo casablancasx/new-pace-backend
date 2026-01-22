@@ -29,7 +29,11 @@ public class AvaliadorSetorStrategy implements SetorStrategy {
             Subnucleo subnucleoDaUnidade = extrairSubnucleo(unidade.getSigla());
             assert subnucleoDaUnidade != null;
             if (subnucleoDaUnidade.equals(audiencia.getSubnucleo())) {
-                setorId = unidade.getUnidadeId();
+                setorId = unidade.getSetores().stream()
+                        .filter(setor -> setor.getUnidade().getUnidadeId().equals(unidade.getUnidadeId()))
+                        .findFirst()
+                        .orElseThrow()
+                        .getSetorId();
                 break;
             }
         }

@@ -37,7 +37,11 @@ public class PautistaSetorStrategy implements SetorStrategy{
             assert subnucleoDaUnidade != null;
 
             if(audiencia.getSubnucleo().equals(subnucleoDaUnidade) && audiencia.getClasseJudicial().equals(classeDaUnidade)){
-                setorId = unidade.getUnidadeId();
+                setorId = unidade.getSetores().stream()
+                        .filter(setor -> setor.getUnidade().getUnidadeId().equals(unidade.getUnidadeId()))
+                        .findFirst()
+                        .orElseThrow()
+                        .getSetorId();
                 break;
             }
         }
