@@ -34,8 +34,8 @@ public class PautaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PautaDTO> buscarPautaPorId(@PathVariable Long id) {
-        PautaDTO pauta = pautaService.buscarPautaPorId(id);
+    public ResponseEntity<PautaDTO> buscarPautaPorId(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        PautaDTO pauta = pautaService.buscarPautaPorId(id, token);
         return ResponseEntity.ok(pauta);
     }
 }

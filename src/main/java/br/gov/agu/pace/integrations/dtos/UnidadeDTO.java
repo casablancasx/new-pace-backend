@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class UnidadeDTO {
     private Long id;
     private String nome;
+    private String sigla;
 }

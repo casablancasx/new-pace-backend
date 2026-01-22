@@ -44,7 +44,7 @@ public class UserService {
         avaliador.setMetric(new UserMetricEntity(avaliador));
 
         for (SetorDTO setor: dto.getSetores()){
-            UnidadeEntity novaUnidade = unidadeService.salvarUnidade(setor.getUnidade().getId(),setor.getUnidade().getNome());
+            UnidadeEntity novaUnidade = unidadeService.salvarUnidade(setor.getUnidade().getId(),setor.getUnidade().getNome(), setor.getUnidade().getSigla());
             SetorEntity novoSetor = new SetorEntity(setor.getId(), setor.getNome(), novaUnidade);
             setorService.salvarSetor(novoSetor);
             avaliador.getSetores().add(novoSetor);

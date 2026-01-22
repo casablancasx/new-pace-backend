@@ -24,11 +24,14 @@ public class UnidadeEntity {
 
     private String nome;
 
+    private String sigla;
+
     @OneToMany(mappedBy = "unidade",fetch = FetchType.LAZY)
     private Set<SetorEntity> setores;
 
-    public UnidadeEntity(Long unidadeId, String nome) {
+    public UnidadeEntity(Long unidadeId, String nome, String sigla) {
         this.unidadeId = unidadeId;
+        this.sigla = sigla;
         this.nome = nome;
     }
 }

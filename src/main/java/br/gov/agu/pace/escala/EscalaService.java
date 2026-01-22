@@ -76,19 +76,11 @@ public class EscalaService {
         }
 
 
-        Long sucesso = pautas.stream().mapToLong(PautaEntity::getTotalAudienciasCadastradasComSucesso).sum();
-        Long falha = pautas.stream().mapToLong(PautaEntity::getTotalAudienciasCadastradasComErro).sum();
 
-        Long total = sucesso + falha;
 
-        String mensagem = String.format(
-                "Audiências processadas: %d. Tarefas cadastradas: %d. Erro durante cadastro: %d.",
-                total,
-                sucesso,
-                falha
-        );
 
-        return new EscalaResponseDTO(mensagem);
+
+        return new EscalaResponseDTO("audiencias processadas: " + pautas.size());
     }
 
 
@@ -132,19 +124,9 @@ public class EscalaService {
             novaEscala.setUsuario(avaliadorSelecionado);
         }
 
-        Long sucesso = pautas.stream().mapToLong(PautaEntity::getTotalAudienciasCadastradasComSucesso).sum();
-        Long falha = pautas.stream().mapToLong(PautaEntity::getTotalAudienciasCadastradasComErro).sum();
 
-        Long total = sucesso + falha;
 
-        String mensagem = String.format(
-                "Audiências processadas: %d. Tarefas cadastradas: %d. Erro durante cadastro: %d.",
-                total,
-                sucesso,
-                falha
-        );
-
-        return new EscalaResponseDTO(mensagem);
+        return new EscalaResponseDTO("audiencias processadas:");
 
 
     }

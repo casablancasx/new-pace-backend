@@ -34,7 +34,7 @@ public class AvaliadorMapper {
 
     private SetorDTO mapSetorToDTO(SetorEntity setor) {
         UnidadeDTO unidadeDTO = setor.getUnidade() != null
-                ? new UnidadeDTO(setor.getUnidade().getUnidadeId(), setor.getUnidade().getNome())
+                ? new UnidadeDTO(setor.getUnidade().getUnidadeId(), setor.getUnidade().getNome(), setor.getUnidade().getSigla())
                 : null;
 
         return new SetorDTO(

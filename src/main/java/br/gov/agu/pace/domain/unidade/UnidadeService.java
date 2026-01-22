@@ -10,8 +10,8 @@ public class UnidadeService {
     private final UnidadeRepository unidadeRepository;
 
 
-    public UnidadeEntity salvarUnidade(Long unidadeId, String nomeUnidade){
-       return unidadeRepository.save(new UnidadeEntity(unidadeId, nomeUnidade));
+    public UnidadeEntity salvarUnidade(Long unidadeId, String nomeUnidade, String sigla){
+       return unidadeRepository.save(new UnidadeEntity(unidadeId, nomeUnidade, sigla));
     }
 
 }

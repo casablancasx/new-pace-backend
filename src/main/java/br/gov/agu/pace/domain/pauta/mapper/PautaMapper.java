@@ -7,6 +7,7 @@ import br.gov.agu.pace.domain.pauta.dtos.PautaDTO;
 import br.gov.agu.pace.domain.pauta.dtos.PautaResponseDTO;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
+import br.gov.agu.pace.domain.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class PautaMapper {
         return entity;
     }
 
-    public PautaResponseDTO toResponseDto(PautaEntity pautaEntity){
+    public PautaResponseDTO toResponseDto(PautaEntity pautaEntity, UserEntity usuarioSolicitante){
         PautaResponseDTO responseDto = new PautaResponseDTO();
         responseDto.setPautaId(pautaEntity.getPautaId());
         responseDto.setTurno(pautaEntity.getTurno());
@@ -33,7 +34,9 @@ public class PautaMapper {
         responseDto.setSala(pautaEntity.getSala().getNome());
         responseDto.setOrgaoJulgador(pautaEntity.getOrgaoJulgador().getNome());
         responseDto.setUf(pautaEntity.getOrgaoJulgador().getUf().getSigla());
-        responseDto.setAudiencias(pautaEntity.getAudiencias().stream().map(audienciaMapper::toResponseDTO).toList());
+        responseDto.setAudiencias(pautaEntity.getAudiencias().stream()
+                .map(audiencia -> audienciaMapper.toResponseDTO(audiencia, usuarioSolicitante))
+                .toList());
         return responseDto;
     }
 }

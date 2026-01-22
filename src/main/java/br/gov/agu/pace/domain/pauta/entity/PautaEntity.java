@@ -68,18 +68,6 @@ public class PautaEntity {
     }
 
 
-    @JsonIgnore
-    public Long getTotalAudienciasCadastradasComSucesso(){
-        return audiencias.stream()
-                .filter(a ->  a.getTarefa().getStatus().equals(SUCESSO))
-                .count();
-    }
 
-    @JsonIgnore
-    public Long getTotalAudienciasCadastradasComErro(){
-        return audiencias.stream()
-                .filter(a -> a.getTarefa().getStatus().equals(ERRO))
-                .count();
-    }
 
 }
