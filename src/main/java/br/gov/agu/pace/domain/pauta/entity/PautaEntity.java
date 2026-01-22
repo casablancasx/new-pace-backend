@@ -4,7 +4,7 @@ import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
-import br.gov.agu.pace.escala.EscalaEntity;
+import br.gov.agu.pace.domain.escala.EscalaEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,9 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Set;
-
-import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.ERRO;
-import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.SUCESSO;
 
 @Entity
 @Table(name = "tb_pautas")

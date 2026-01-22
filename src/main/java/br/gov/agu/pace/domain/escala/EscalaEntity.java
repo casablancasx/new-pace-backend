@@ -1,6 +1,5 @@
-package br.gov.agu.pace.escala;
+package br.gov.agu.pace.domain.escala;
 
-import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
@@ -12,7 +11,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Set;
 
 @Entity
 @Table(name = "tb_escalas")

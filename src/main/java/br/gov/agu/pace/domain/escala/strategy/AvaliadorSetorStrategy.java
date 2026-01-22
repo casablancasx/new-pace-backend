@@ -1,4 +1,4 @@
-package br.gov.agu.pace.escala.strategy;
+package br.gov.agu.pace.domain.escala.strategy;
 
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.Subnucleo;

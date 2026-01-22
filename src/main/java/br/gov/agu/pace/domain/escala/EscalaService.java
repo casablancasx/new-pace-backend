@@ -1,4 +1,4 @@
-package br.gov.agu.pace.escala;
+package br.gov.agu.pace.domain.escala;
 
 import br.gov.agu.pace.auth.service.TokenService;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;

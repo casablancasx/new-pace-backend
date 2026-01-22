@@ -1,4 +1,4 @@
-package br.gov.agu.pace.escala;
+package br.gov.agu.pace.domain.escala;
 
 public enum StatusEscala {
     CONCLUIDA,
