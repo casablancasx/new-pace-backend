@@ -121,6 +121,7 @@ public class EscalaService {
             novaEscala.setCriador(criador);
             novaEscala.setPauta(pauta);
             novaEscala.setUsuario(avaliadorSelecionado);
+            escalaRepository.save(novaEscala);
         }
 
 
