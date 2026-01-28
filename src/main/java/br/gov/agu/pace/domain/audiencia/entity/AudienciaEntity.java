@@ -32,6 +32,7 @@ public class AudienciaEntity {
 
     private String numeroProcesso;
 
+    @Column(name = "nome_parte", length = 500)
     private String nomeParte;
 
     @JsonIgnore

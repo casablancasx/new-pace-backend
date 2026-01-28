@@ -32,7 +32,9 @@ public class ProcessarAudienciasAsync {
         for (AudienciaDTO audiencia : audiencias) {
             token = tokenService.renovarTokenSeExpirado(token);
             audiencia = contestacaoService.adicionarTipoContestacaoEProcessoId(audiencia, token);
+
             Subnucleo subnucleo = sapiensClient.getSubnucleoFromProcesso(audiencia.getProcessoId(), token);
+
             audiencia.setSubnucleo(subnucleo);
 
             System.out.println(audiencia.getNumeroProcesso() + " - " + subnucleo + " - " + audiencia.getTipoContestacao());

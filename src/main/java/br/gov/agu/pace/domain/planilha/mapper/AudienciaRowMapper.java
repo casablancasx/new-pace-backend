@@ -79,7 +79,26 @@ public class AudienciaRowMapper {
     }
 
     private String getPoloAtivoFromRow(Row row) {
-        return row.getCell(3).getStringCellValue().replace(POLO_PASSIVO, "");
+        String texto = row.getCell(3).getStringCellValue();
+        
+        // Caso 1: Formato "NOME - CPF: xxx (AUTOR) X INSS..."
+        if (texto.contains(" - CPF:")) {
+            return texto.split(" - CPF:")[0].trim();
+        }
+        
+        // Caso 2: Formato com quebra de linha "NOME\nINSS..."
+        if (texto.contains("\n")) {
+            String[] linhas = texto.split("\n");
+            for (String linha : linhas) {
+                linha = linha.trim();
+                if (!linha.isEmpty() && !linha.contains(POLO_PASSIVO)) {
+                    return linha;
+                }
+            }
+        }
+        
+        // Fallback: remove o INSS e retorna o que sobrar
+        return texto.replace(POLO_PASSIVO, "").trim();
     }
 
     private List<String> getAdvogadosFromRow(Row row) {
