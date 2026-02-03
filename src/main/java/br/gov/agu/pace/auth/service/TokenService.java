@@ -38,6 +38,11 @@ public class TokenService {
     }
 
     public Long getSapiensIdFromToken(String token){
+
+        if (token.startsWith("Bearer ")){
+            token = token.replace("Bearer ", "");
+        }
+
         return getUserFromToken(token).getSapiensId();
     }
 

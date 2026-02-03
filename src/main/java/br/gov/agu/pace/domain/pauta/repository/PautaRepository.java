@@ -34,7 +34,6 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             "WHERE p.data BETWEEN :dataInicio AND :dataFim " +
             "AND (:ufs IS NULL OR p.orgaoJulgador.uf.sigla IN :ufs) " +
             "AND (:orgaoJulgadorIds IS NULL OR p.orgaoJulgador.orgaoJulgadorId IN :orgaoJulgadorIds) " +
-            "AND (:tiposContestacao IS NULL OR a.tipoContestacao IN :tiposContestacao) " +
             "AND (p.isEscaladaAvaliador IS FALSE )")
     Set<PautaEntity> buscarPautasSemAvaliadoresEscalados(
             @Param("dataInicio") LocalDate dataInicio,
@@ -58,8 +57,9 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             @Param("orgaoJulgadorIds") List<Long> orgaoJulgadorIds,
             @Param("tiposContestacao") List<TipoContestacao> tiposContestacao);
 
-    @Query("SELECT p FROM PautaEntity p " +
-            "LEFT JOIN p.escala e " +
+    @Query("SELECT DISTINCT p FROM PautaEntity p " +
+            "LEFT JOIN p.audiencias a " +
+            "LEFT JOIN a.escalas e " +
             "LEFT JOIN e.usuario u " +
             "WHERE (:orgaoJulgadorId IS NULL OR p.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId) " +
             "AND (:uf IS NULL OR p.orgaoJulgador.uf.sigla = :uf) " +

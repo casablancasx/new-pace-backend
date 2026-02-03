@@ -4,6 +4,7 @@ import br.gov.agu.pace.auth.service.TokenService;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.enums.ClasseJudicial;
+import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
 import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pauta.repository.PautaRepository;
@@ -105,6 +106,7 @@ public class EscalaService {
             }
 
             audiencia.setEscaladaAvaliador(true);
+            audiencia.setAnaliseAvaliador(RespostaAnaliseAvaliador.ANALISE_PENDENTE);
             audienciaRepository.save(audiencia);
 
             novaEscala.setTarefa(tarefa);

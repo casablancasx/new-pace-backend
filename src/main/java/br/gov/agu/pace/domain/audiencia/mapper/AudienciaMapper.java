@@ -33,7 +33,7 @@ public class AudienciaMapper {
         entity.setAssunto(assunto);
         entity.setPauta(pauta);
         entity.setAdvogados(new LinkedHashSet<>(advogados));
-        entity.setAnaliseAvaliador(RespostaAnaliseAvaliador.ANALISE_PENDENTE);
+        entity.setAnaliseAvaliador(RespostaAnaliseAvaliador.NAO_ESCALADA);
 
 
         // Audiência é prioritária se houver pelo menos um advogado prioritário
