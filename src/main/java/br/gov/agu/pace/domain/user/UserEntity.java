@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Entity
@@ -49,7 +50,7 @@ public class UserEntity{
 
     private LocalDateTime ultimoAcesso;
 
-    private LocalDateTime dataCadastro = LocalDateTime.now(TimeZone.getDefault().toZoneId());
+    private LocalDateTime dataCadastro = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private UserMetricEntity metric;

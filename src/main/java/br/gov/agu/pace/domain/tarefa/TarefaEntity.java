@@ -1,7 +1,6 @@
 package br.gov.agu.pace.domain.tarefa;
 
-import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
-import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
+import br.gov.agu.pace.domain.escala.EscalaEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,14 +22,16 @@ public class TarefaEntity {
     @Id
     private Long tarefaId;
 
-    @ManyToOne
-    @JoinColumn(name = "audiencia_id")
-    private AudienciaEntity audiencia;
+    @OneToOne
+    @JoinColumn(name = "escala_id", unique = true)
+    private EscalaEntity escala;
 
-    @Enumerated(EnumType.STRING)
-    private StatusCadastroTarefa status;
+    @Column(name = "setor_destino_id")
+    private long setorDestino;
 
-    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.systemDefault());
+
+    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
 
     @ManyToOne
     private UserEntity destinatario;

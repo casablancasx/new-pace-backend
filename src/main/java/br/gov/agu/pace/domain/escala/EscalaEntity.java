@@ -2,6 +2,7 @@ package br.gov.agu.pace.domain.escala;
 
 import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class EscalaEntity {
     @Column(name = "escala_id")
     private Long escalaId;
 
-    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.systemDefault());
+    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
     @ManyToOne
     @JoinColumn(name = "criador_id")
@@ -42,5 +43,8 @@ public class EscalaEntity {
 
     @Enumerated(EnumType.STRING)
     private StatusEscala status = StatusEscala.ESCALADA;
+
+    @OneToOne(mappedBy = "escala", optional = false)
+    private TarefaEntity tarefa;
 
 }

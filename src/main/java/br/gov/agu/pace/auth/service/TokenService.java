@@ -47,10 +47,12 @@ public class TokenService {
         long expMillis = jwt.getExpiresAt().getTime();
         long agora = System.currentTimeMillis();
 
-        // 3 minutos antes (3 * 60 * 1000 = 180000)
-        long janelaRenovacao = 3 * 60 * 1000;
+        // 10 minutos antes (15 * 60 * 1000)
+        long janelaRenovacao = 15 * 60 * 1000;
 
+        // Se (Expiração - 10min) for menor ou igual ao tempo agora, renova.
         if (expMillis - janelaRenovacao <= agora) {
+            System.out.println("RENOVANDO TOKEN");
             return sapiensClient.refreshToken(token);
         }
 

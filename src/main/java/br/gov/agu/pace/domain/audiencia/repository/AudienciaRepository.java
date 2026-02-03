@@ -20,6 +20,9 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
 
     List<AudienciaEntity> findByPauta(PautaEntity pauta);
 
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END FROM AudienciaEntity a WHERE a.numeroProcesso = :numeroProcesso AND a.processoId IS NOT NULL")
+    boolean existsByNumeroProcessoAndProcessoIdIsNotNull(String numeroProcesso);
+
     @Query(value = "SELECT a FROM AudienciaEntity a WHERE (:numeroProcesso IS NULL OR a.numeroProcesso LIKE CONCAT('%', :numeroProcesso, '%')) AND (:orgaoJulgadorId IS NULL OR a.pauta.orgaoJulgador.orgaoJulgadorId = :orgaoJulgadorId)")
     Page<AudienciaEntity> listarAudiencias(String numeroProcesso, Long orgaoJulgadorId, Pageable pageable);
 }

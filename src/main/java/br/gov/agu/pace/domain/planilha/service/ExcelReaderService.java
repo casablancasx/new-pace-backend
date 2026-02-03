@@ -24,7 +24,7 @@ public class ExcelReaderService {
     private final AudienciaRowMapper audienciaRowMapper;
 
 
-    public Set<AudienciaDTO> importarPlanilha(MultipartFile file) throws IOException, Exception {
+    public Set<AudienciaDTO> importarPlanilha(MultipartFile file) throws Exception {
 
         Set<AudienciaDTO> audiencias = new LinkedHashSet<>();
         try (InputStream inputStream = file.getInputStream()){

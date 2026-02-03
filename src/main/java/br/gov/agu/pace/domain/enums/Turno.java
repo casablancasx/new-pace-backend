@@ -4,7 +4,7 @@ public enum Turno {
     MANHA("Manhã"),
     TARDE("Tarde");
 
-    private String descricao;
+    private final String descricao;
 
     Turno(String descricao) {
         this.descricao = descricao;

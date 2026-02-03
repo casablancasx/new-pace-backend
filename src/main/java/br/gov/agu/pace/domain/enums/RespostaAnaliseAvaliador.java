@@ -7,7 +7,7 @@ public enum RespostaAnaliseAvaliador {
     CANCELADA("Cancelada"),
     REDESIGNADA("Redesignada");
 
-    private String descricao;
+    private final String descricao;
 
     RespostaAnaliseAvaliador(String descricao) {
         this.descricao = descricao;
