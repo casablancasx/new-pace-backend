@@ -5,7 +5,7 @@ import br.gov.agu.pace.domain.assunto.AssuntoEntity;
 import br.gov.agu.pace.domain.audiencia.dtos.AudienciaResponseDTO;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
-import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
+import br.gov.agu.pace.domain.escala.EscalaEntity;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
 import br.gov.agu.pace.domain.tarefa.TarefaEntity;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class AudienciaMapper {
@@ -34,7 +35,7 @@ public class AudienciaMapper {
         entity.setAdvogados(new LinkedHashSet<>(advogados));
         entity.setAnaliseAvaliador(RespostaAnaliseAvaliador.ANALISE_PENDENTE);
 
-        
+
         // Audiência é prioritária se houver pelo menos um advogado prioritário
         boolean hasPrioritario = advogados.stream().anyMatch(AdvogadoEntity::isPrioritario);
         entity.setPrioritaria(hasPrioritario);
@@ -42,11 +43,11 @@ public class AudienciaMapper {
 
         entity.setClasseJudicial(dto.getClasseJudicial());
         entity.setSubnucleo(dto.getSubnucleo());
-        
+
         return entity;
     }
 
-    public AudienciaResponseDTO toResponseDTO(AudienciaEntity entity, UserEntity usuarioSolicitante){
+    public AudienciaResponseDTO toResponseDTO(AudienciaEntity entity, UserEntity usuarioSolicitante) {
         AudienciaResponseDTO responseDTO = new AudienciaResponseDTO();
         responseDTO.setAudienciaId(entity.getAudienciaId());
         responseDTO.setNumeroProcesso(entity.getNumeroProcesso());
@@ -61,14 +62,16 @@ public class AudienciaMapper {
         responseDTO.setObservacao(entity.getObservacao());
         responseDTO.setClasseJudicial(entity.getClasseJudicial());
         responseDTO.setSubnucleo(entity.getSubnucleo());
-        
+
         // Busca a tarefa do usuário solicitante
-        Long tarefaIdDoUsuario = entity.getTarefas().stream()
-                .filter(tarefa -> tarefa.getDestinatario().getSapiensId().equals(usuarioSolicitante.getSapiensId()))
+        Long tarefaIdDoUsuario = entity.getEscalas().stream()
+                .filter(e -> Objects.equals(e.getUsuario(), usuarioSolicitante))
+                .map(EscalaEntity::getTarefa)
+                .filter(Objects::nonNull)
                 .map(TarefaEntity::getTarefaId)
                 .findFirst()
                 .orElse(null);
-        
+
         responseDTO.setTarefaId(tarefaIdDoUsuario);
         return responseDTO;
     }

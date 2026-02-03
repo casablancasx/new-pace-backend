@@ -25,23 +25,35 @@ public class CadastrarTarefaService {
     private final SetorStrategyFactory setorStrategyFactory;
 
 
+    public TarefaEntity cadastrarTarefa(EscalaRequestDTO infoEscala, UserEntity usuarioDestino, AudienciaEntity audiencia, String token) {
 
-    //TODO: REFACT
-    public TarefaEntity cadastrarTarefa(Long setorOrigemId, Long especieTarefaId, UserEntity sapiensUser, AudienciaEntity audiencia, String token) {
-        TarefaEntity novaTarefa = new TarefaEntity();
-        SetorStrategy strategy = setorStrategyFactory.getStrategy(sapiensUser);
-        Long setorDestinoId = strategy.getSetorId(sapiensUser, audiencia);
 
-        Long tarefaId = sapiensClient.cadastrarTarefaSapiens(sapiensUser, audiencia, setorOrigemId, especieTarefaId, setorDestinoId, token);
-        var statusCadastro = tarefaId != null ? SUCESSO : ERRO;
-        novaTarefa.setTarefaId(tarefaId);
-        novaTarefa.setDestinatario(sapiensUser);
-        
-        if (tarefaId != null) {
-            audiencia.getTarefas().add(novaTarefa);
-            tarefaRepository.save(novaTarefa);
+        try {
+            TarefaEntity novaTarefa = new TarefaEntity();
+
+            SetorStrategy strategy = setorStrategyFactory.getStrategy(usuarioDestino);
+
+            Long setorDestinoId = infoEscala.isDistribuicaoManualSetores() ?
+                    infoEscala.getSetorDestinoId() :
+                    strategy.getSetorId(usuarioDestino, audiencia);
+
+            Long tarefaId = sapiensClient.cadastrarTarefaSapiens(
+                    usuarioDestino,
+                    audiencia,
+                    infoEscala.getSetorOrigemId(),
+                    infoEscala.getEspecieTarefaId(),
+                    setorDestinoId,
+                    token
+            );
+
+            novaTarefa.setTarefaId(tarefaId);
+            novaTarefa.setDestinatario(usuarioDestino);
+
+            return tarefaRepository.save(novaTarefa);
+
+        } catch (Exception e) {
+            return null;
         }
-        return audienciaRepository.save(audiencia);
     }
 
 }

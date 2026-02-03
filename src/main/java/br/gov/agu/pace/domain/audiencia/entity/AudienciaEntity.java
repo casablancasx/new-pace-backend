@@ -3,6 +3,7 @@ package br.gov.agu.pace.domain.audiencia.entity;
 import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
 import br.gov.agu.pace.domain.enums.*;
+import br.gov.agu.pace.domain.escala.EscalaEntity;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -73,14 +74,15 @@ public class AudienciaEntity {
     @Column(name = "processo_id")
     private Long processoId;
 
-    @OneToMany(mappedBy = "audiencia", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TarefaEntity> tarefas = new LinkedHashSet<>();
-
     @Enumerated(EnumType.STRING)
     private ClasseJudicial classeJudicial;
 
     @Enumerated(EnumType.STRING)
     private Subnucleo subnucleo;
+
+
+    @OneToMany(mappedBy = "audiencia", cascade = CascadeType.ALL)
+    private List<EscalaEntity> escalas;
 
     public List<String> getAdvogados(){
         return advogados.stream().map(AdvogadoEntity::getNome).toList();

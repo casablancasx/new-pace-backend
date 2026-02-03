@@ -20,10 +20,10 @@ public class EscalaController {
     }
 
 
-    @PostMapping("/pautistas")
-    public ResponseEntity<EscalaResponseDTO> post(@RequestBody EscalaRequestDTO dto, @RequestHeader("Authorization") String token) {
-        String tokenLimpo  = token.replace("Bearer ", "");
-        EscalaResponseDTO response = escalaService.escalarPautistas(dto, tokenLimpo);
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("/pautistas")
+//    public ResponseEntity<EscalaResponseDTO> post(@RequestBody EscalaRequestDTO dto, @RequestHeader("Authorization") String token) {
+//        String tokenLimpo  = token.replace("Bearer ", "");
+//        EscalaResponseDTO response = escalaService.escalarPautistas(dto, tokenLimpo);
+//        return ResponseEntity.ok(response);
+//    }
 }

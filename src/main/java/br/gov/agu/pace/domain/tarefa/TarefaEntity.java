@@ -3,10 +3,7 @@ package br.gov.agu.pace.domain.tarefa;
 import br.gov.agu.pace.domain.escala.EscalaEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -17,6 +14,7 @@ import java.time.ZoneId;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class TarefaEntity {
 
     @Id

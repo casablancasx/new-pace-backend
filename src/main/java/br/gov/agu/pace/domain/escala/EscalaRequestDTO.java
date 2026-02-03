@@ -34,5 +34,9 @@ public class EscalaRequestDTO {
 
     private List<Long> pautistaIds;
 
+    private boolean distribuicaoManualSetores;
+
+    private long setorDestinoId;
+
 
 }

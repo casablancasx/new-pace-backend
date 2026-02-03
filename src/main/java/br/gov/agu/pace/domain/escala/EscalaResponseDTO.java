@@ -9,4 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class EscalaResponseDTO {
     private String message;
+    private int sucesso;
+    private int erro;
+    private int total;
 }

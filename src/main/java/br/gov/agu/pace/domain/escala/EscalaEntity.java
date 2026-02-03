@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.escala;
 
+import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.tarefa.TarefaEntity;
@@ -32,17 +33,15 @@ public class EscalaEntity {
     @JoinColumn(name = "criador_id")
     private UserEntity criador;
 
-    @ManyToOne(optional = false)
-    private PautaEntity pauta;
+    @ManyToOne
+    @JoinColumn(name = "audiencia_id")
+    private AudienciaEntity audiencia;
 
     @ManyToOne
     private UserEntity usuario;
 
     @Enumerated(EnumType.STRING)
     private TipoEscala tipo;
-
-    @Enumerated(EnumType.STRING)
-    private StatusEscala status = StatusEscala.ESCALADA;
 
     @OneToOne(mappedBy = "escala", optional = false)
     private TarefaEntity tarefa;
