@@ -2,6 +2,7 @@ package br.gov.agu.pace.commons.exceptions.handler;
 
 import br.gov.agu.pace.commons.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,12 +65,24 @@ public class RestExceptionHandler {
     public ResponseEntity<StandardError> planilhaMapperException(PlanilhaException e, HttpServletRequest request) {
         StandardError err = new StandardError(
                 java.time.Instant.now(),
-                500,
+                400,
                 "Planilha Exception",
                 e.getMessage(),
                 request.getRequestURI()
         );
-        return ResponseEntity.status(500).body(err);
+        return ResponseEntity.status(400).body(err);
+    }
+
+    @ExceptionHandler(EscalaException.class)
+    public ResponseEntity<StandardError> escalaException(EscalaException e, HttpServletRequest request) {
+        StandardError err = new StandardError(
+                java.time.Instant.now(),
+                400,
+                "Escala Exception",
+                e.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(400).body(err);
     }
 
 }

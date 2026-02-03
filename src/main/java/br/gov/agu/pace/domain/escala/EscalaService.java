@@ -1,13 +1,14 @@
 package br.gov.agu.pace.domain.escala;
 
 import br.gov.agu.pace.auth.service.TokenService;
+import br.gov.agu.pace.commons.exceptions.EscalaException;
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
 import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
-import br.gov.agu.pace.domain.enums.ClasseJudicial;
-import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
-import br.gov.agu.pace.domain.enums.TipoEscala;
+import br.gov.agu.pace.domain.enums.*;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.domain.pauta.repository.PautaRepository;
+import br.gov.agu.pace.domain.setor.SetorEntity;
+import br.gov.agu.pace.domain.unidade.UnidadeEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import br.gov.agu.pace.domain.user.UserRepository;
 import br.gov.agu.pace.domain.user.UserService;
@@ -15,11 +16,15 @@ import br.gov.agu.pace.domain.user.avaliador.AvaliadorService;
 import br.gov.agu.pace.domain.user.pautista.PautistaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,9 +47,10 @@ public class EscalaService {
         Set<PautaEntity> pautas = getBuscarPautasSemAvaliadoresEscalados(infoEscala);
 
         List<UserEntity> avaliadores = avaliadorService.buscarAvaliadoresPorIds(infoEscala.getAvaliadorIds());
+        validarAvaliadores(avaliadores);
 
-       int sucesso = 0;
-       int falha = 0;
+        int sucesso = 0;
+        int falha = 0;
 
         for (PautaEntity pauta : pautas) {
 
@@ -58,14 +64,11 @@ public class EscalaService {
 
 
         String message;
-        if (falha == 0 ){
+        if (falha == 0) {
             message = "Todas as " + sucesso + " audiencias foram escaladas com sucesso";
-        }
-        else{
+        } else {
             message = sucesso + " audiencias foram escaladas com sucesso, " + falha + " falharam";
         }
-
-
 
 
         return new EscalaResponseDTO(
@@ -88,7 +91,7 @@ public class EscalaService {
                 .filter(
                         a ->
                                 infoEscala.getTipoContestacao().contains(a.getTipoContestacao()) ||
-                                a.getClasseJudicial() == ClasseJudicial.COMUM)
+                                        a.getClasseJudicial() == ClasseJudicial.COMUM)
                 .toList();
 
         for (AudienciaEntity audiencia : audienciasFiltradas) {
@@ -137,6 +140,29 @@ public class EscalaService {
 
     private UserEntity getCriador(String token) {
         return userService.buscarUsuarioPorSapiensId(tokenService.getSapiensIdFromToken(token));
+    }
+
+    private void validarAvaliadores(List<UserEntity> avaliadores) {
+        if (avaliadores == null) return;
+
+        avaliadores.forEach(
+                avaliador -> avaliador.getSetores().
+                        forEach(s -> validarSetor(s, avaliador))
+        );
+    }
+
+    private void validarSetor(SetorEntity setor, UserEntity user) {
+
+        String sigla = setor.getUnidade().getSigla();
+        Pattern pattern = Pattern.compile("(EBI|ESEAS|ERU)\\d*", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(sigla);
+
+        if (!matcher.find()) {
+            throw new EscalaException(String.format(
+                    "O setor '%s' do usuário %s não permite distribuição automática. Por favor, utilize a distribuição manual.",
+                    setor.getNome(), user.getNome()
+            ));
+        }
     }
 
 

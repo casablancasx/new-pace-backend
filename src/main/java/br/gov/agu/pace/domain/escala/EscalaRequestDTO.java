@@ -36,7 +36,7 @@ public class EscalaRequestDTO {
 
     private boolean distribuicaoManualSetores;
 
-    private long setorDestinoId;
+    private Long setorDestinoId;
 
 
 }
