@@ -78,7 +78,7 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
     PautaEntity buscarPorId(Long id);
 
     @Query("SELECT DISTINCT e.usuario.sapiensId FROM EscalaEntity e " +
-            "WHERE e.pauta.data = :data " +
+            "WHERE e.audiencia.pauta.data = :data " +
             "AND e.tipo = br.gov.agu.pace.domain.enums.TipoEscala.PAUTISTA")
     List<Long> buscarPautistasEscaladosNaData(@Param("data") LocalDate data);
 }
