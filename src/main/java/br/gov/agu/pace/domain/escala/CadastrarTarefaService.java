@@ -25,9 +25,10 @@ public class CadastrarTarefaService {
     private final SetorStrategyFactory setorStrategyFactory;
 
 
-    public AudienciaEntity cadastrarTarefa(Long setorOrigemId, Long especieTarefaId, UserEntity sapiensUser, AudienciaEntity audiencia, String token) {
-        TarefaEntity novaTarefa = new TarefaEntity();
 
+    //TODO: REFACT
+    public TarefaEntity cadastrarTarefa(Long setorOrigemId, Long especieTarefaId, UserEntity sapiensUser, AudienciaEntity audiencia, String token) {
+        TarefaEntity novaTarefa = new TarefaEntity();
         SetorStrategy strategy = setorStrategyFactory.getStrategy(sapiensUser);
         Long setorDestinoId = strategy.getSetorId(sapiensUser, audiencia);
 
@@ -35,8 +36,6 @@ public class CadastrarTarefaService {
         var statusCadastro = tarefaId != null ? SUCESSO : ERRO;
         novaTarefa.setTarefaId(tarefaId);
         novaTarefa.setDestinatario(sapiensUser);
-        novaTarefa.setStatus(statusCadastro);
-        novaTarefa.setAudiencia(audiencia);
         
         if (tarefaId != null) {
             audiencia.getTarefas().add(novaTarefa);

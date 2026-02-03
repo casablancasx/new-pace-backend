@@ -69,12 +69,7 @@ public class EscalaService {
             userRepository.save(avaliadorSelecionado);
             audienciaRepository.saveAll(audiencias);
 
-            EscalaEntity novaEscala = new EscalaEntity();
-            novaEscala.setTipo(TipoEscala.AVALIADOR);
-            novaEscala.setCriador(criador);
-            novaEscala.setPauta(pauta);
-            novaEscala.setUsuario(avaliadorSelecionado);
-            escalaRepository.save(novaEscala);
+
         }
 
 
