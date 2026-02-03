@@ -43,14 +43,14 @@ public class PautaEntity {
     @Enumerated(EnumType.STRING)
     private Turno turno;
 
+    private boolean isEscaladaAvaliador;
+
+    private boolean isEscaladaPautista;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AudienciaEntity> audiencias;
-
-    @ManyToOne
-    @JoinColumn(name = "escala_id")
-    private EscalaEntity escala;
 
 
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));

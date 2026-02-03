@@ -147,19 +147,25 @@ public class SapiensClient {
     //Retorna ID da tarefa criada no Sapiens ou null em caso de erro
     public Long cadastrarTarefaSapiens(UserEntity user, AudienciaEntity audiencia, Long setorOrigemId, Long especieTarefaId, Long setorDestino, String token) {
 
+        String horario = audiencia.getHorario();
+        String[] horaArray = horario.split(":");
+        int horas = Integer.parseInt(horaArray[0]);
+        int minutos = Integer.parseInt(horaArray[1]);
+
         var pauta = audiencia.getPauta();
 
         Map<String, Object> body = new HashMap<>();
         body.put("postIt", null);
         body.put("urgente", null);
-        body.put("observacao", String.format("%s - %s - %s - %s",
-                audiencia.getTipoContestacao().getDescricao() != null ? audiencia.getTipoContestacao() : "N/A",
+        body.put("observacao", String.format("%s - %s - %s - %s - %s",
+                audiencia.getTipoContestacao().getDescricao() != null ? audiencia.getTipoContestacao().getDescricao() : "N/A",
                 pauta.getData() != null ? pauta.getData().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A",
+                audiencia.getHorario() != null ? audiencia.getHorario() : "N/A",
                 pauta.getOrgaoJulgador() != null ? pauta.getOrgaoJulgador().getNome() : "N/A",
                 pauta.getTurno() != null ? pauta.getTurno() : "N/A"));
         body.put("localEvento", null);
         body.put("dataHoraInicioPrazo", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
-        body.put("dataHoraFinalPrazo", pauta.getData().atTime(20, 0, 0).format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        body.put("dataHoraFinalPrazo", pauta.getData().atTime(horas, minutos, 0).format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         body.put("dataHoraLeitura", null);
         body.put("dataHoraDistribuicao", null);
         body.put("processo", audiencia.getProcessoId());

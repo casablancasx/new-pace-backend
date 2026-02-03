@@ -35,7 +35,7 @@ public interface PautaRepository extends JpaRepository<PautaEntity, Long> {
             "AND (:ufs IS NULL OR p.orgaoJulgador.uf.sigla IN :ufs) " +
             "AND (:orgaoJulgadorIds IS NULL OR p.orgaoJulgador.orgaoJulgadorId IN :orgaoJulgadorIds) " +
             "AND (:tiposContestacao IS NULL OR a.tipoContestacao IN :tiposContestacao) " +
-            "AND (p.escala.escalaId IS NULL)")
+            "AND (p.isEscaladaAvaliador IS FALSE )")
     Set<PautaEntity> buscarPautasSemAvaliadoresEscalados(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,

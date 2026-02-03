@@ -69,6 +69,10 @@ public class AudienciaEntity {
     //Flag para identificar se houve adicao de uma nova audiencia em uma pauta existente
     private boolean novaAudiencia;
 
+    private boolean isEscaladaAvaliador;
+
+    private boolean isEscaladaPautista;
+
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
     @Column(name = "processo_id")

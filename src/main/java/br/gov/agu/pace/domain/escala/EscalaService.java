@@ -32,6 +32,7 @@ public class EscalaService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final EscalaRepository escalaRepository;
+    private final AudienciaRepository audienciaRepository;
 
 
     public EscalaResponseDTO escalarAvaliadores(EscalaRequestDTO infoEscala, String token) {
@@ -41,23 +42,36 @@ public class EscalaService {
 
         List<UserEntity> avaliadores = avaliadorService.buscarAvaliadoresPorIds(infoEscala.getAvaliadorIds());
 
-        Map<String, Integer> resultado = Map.of();
+       int sucesso = 0;
+       int falha = 0;
 
         for (PautaEntity pauta : pautas) {
 
             //Gerenciamento de token para situacoes onde usuario selecionar muitas audiencias
             token = tokenService.renovarTokenSeExpirado(token);
             String finalToken = token;
-            resultado = processarPauta(infoEscala, pauta, avaliadores, criador, finalToken);
-
+            var resusltadoPauta = processarPauta(infoEscala, pauta, avaliadores, criador, finalToken);
+            sucesso += resusltadoPauta.get("sucesso");
+            falha += resusltadoPauta.get("falha");
         }
 
 
+        String message;
+        if (falha == 0 ){
+            message = "Todas as " + sucesso + " audiencias foram escaladas com sucesso";
+        }
+        else{
+            message = sucesso + " audiencias foram escaladas com sucesso, " + falha + " falharam";
+        }
+
+
+
+
         return new EscalaResponseDTO(
-                "Audiencias processadas com sucesso",
-                resultado.get("sucesso"),
-                resultado.get("falha"),
-                pautas.stream().map(PautaEntity::getAudiencias).toList().size()
+                message,
+                sucesso,
+                falha,
+                sucesso + falha
         );
     }
 
@@ -70,8 +84,10 @@ public class EscalaService {
 
         List<AudienciaEntity> audienciasFiltradas = pauta.getAudiencias()
                 .stream()
-                .filter(a -> a.getClasseJudicial().equals(ClasseJudicial.COMUM))
-                .filter(a -> infoEscala.getTipoContestacao().contains(a.getTipoContestacao()))
+                .filter(
+                        a ->
+                                infoEscala.getTipoContestacao().contains(a.getTipoContestacao()) ||
+                                a.getClasseJudicial() == ClasseJudicial.COMUM)
                 .toList();
 
         for (AudienciaEntity audiencia : audienciasFiltradas) {
@@ -88,15 +104,21 @@ public class EscalaService {
                 continue;
             }
 
+            audiencia.setEscaladaAvaliador(true);
+            audienciaRepository.save(audiencia);
+
             novaEscala.setTarefa(tarefa);
+            novaEscala.setAudiencia(audiencia);
             escalaRepository.save(novaEscala);
             sucesso++;
         }
 
         avaliadorSelecionado.incrementarAudiencias(audienciasFiltradas);
         avaliadorSelecionado.incrementarPautas();
-
         userRepository.save(avaliadorSelecionado);
+
+        pauta.setEscaladaAvaliador(true);
+        pautaRepository.save(pauta);
 
         return Map.of("sucesso", sucesso, "falha", falha);
     }
