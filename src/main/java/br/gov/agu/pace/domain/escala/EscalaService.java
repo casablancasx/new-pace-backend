@@ -47,7 +47,7 @@ public class EscalaService {
         Set<PautaEntity> pautas = getBuscarPautasSemAvaliadoresEscalados(infoEscala);
 
         List<UserEntity> avaliadores = avaliadorService.buscarAvaliadoresPorIds(infoEscala.getAvaliadorIds());
-        validarAvaliadores(avaliadores);
+        validarAvaliadores(avaliadores, infoEscala.isDistribuicaoManualSetores());
 
         int sucesso = 0;
         int falha = 0;
@@ -142,8 +142,8 @@ public class EscalaService {
         return userService.buscarUsuarioPorSapiensId(tokenService.getSapiensIdFromToken(token));
     }
 
-    private void validarAvaliadores(List<UserEntity> avaliadores) {
-        if (avaliadores == null) return;
+    private void validarAvaliadores(List<UserEntity> avaliadores, boolean isDestribuicaoManual) {
+        if (avaliadores == null || isDestribuicaoManual) return;
 
         avaliadores.forEach(
                 avaliador -> avaliador.getSetores().

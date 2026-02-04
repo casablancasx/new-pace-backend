@@ -26,7 +26,7 @@ COPY --from=build /app/target/pace-0.0.1-SNAPSHOT.jar app.jar
 
 ENV JAVA_OPTS="-XX:+UseParallelGC -XX:MaxRAMPercentage=75.0"
 
-EXPOSE 9090
+EXPOSE 9091
 
 
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
