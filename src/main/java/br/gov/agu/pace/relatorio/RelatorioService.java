@@ -61,4 +61,16 @@ public class RelatorioService {
         );
         return new TotaisRelatorioDTO(totalAudiencias, totalPautas);
     }
+
+    public List<SetorRelatorioDTO> gerarRelatorioSetores(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial) {
+        return audienciaRepository.gerarRelatorioSetores(
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+        );
+    }
+
+    public List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleos(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial) {
+        return audienciaRepository.gerarRelatorioSubnucleos(
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+        );
+    }
 }

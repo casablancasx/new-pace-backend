@@ -77,8 +77,35 @@ public class RelatorioController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/setores")
+    public ResponseEntity<List<SetorRelatorioDTO>> listarSetores(
+            @RequestParam LocalDate dataInicio,
+            @RequestParam LocalDate dataFim,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long orgaoJulgadorId,
+            @RequestParam(required = false) TipoContestacao tipoContestacao,
+            @RequestParam(required = false) Subnucleo subnucleo,
+            @RequestParam(required = false) ClasseJudicial classeJudicial
+    ){
+        List<SetorRelatorioDTO> response = relatorioService.gerarRelatorioSetores(
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+        );
+        return ResponseEntity.ok(response);
+    }
 
-
-
-
+    @GetMapping("/subnucleos")
+    public ResponseEntity<List<SubnucleoRelatorioDTO>> listarSubnucleos(
+            @RequestParam LocalDate dataInicio,
+            @RequestParam LocalDate dataFim,
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long orgaoJulgadorId,
+            @RequestParam(required = false) TipoContestacao tipoContestacao,
+            @RequestParam(required = false) Subnucleo subnucleo,
+            @RequestParam(required = false) ClasseJudicial classeJudicial
+    ){
+        List<SubnucleoRelatorioDTO> response = relatorioService.gerarRelatorioSubnucleos(
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+        );
+        return ResponseEntity.ok(response);
+    }
 }

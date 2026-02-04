@@ -6,6 +6,8 @@ import br.gov.agu.pace.domain.enums.Subnucleo;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
 import br.gov.agu.pace.relatorio.ContestacaoRelatorioDTO;
+import br.gov.agu.pace.relatorio.SetorRelatorioDTO;
+import br.gov.agu.pace.relatorio.SubnucleoRelatorioDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -105,6 +107,68 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
         AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
         """)
     Long contarTotalPautas(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
+            @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT new br.gov.agu.pace.relatorio.SetorRelatorioDTO(
+            s.nome,
+            COUNT(DISTINCT a)
+        )
+        FROM SetorEntity s
+        JOIN s.usuarios u
+        JOIN EscalaEntity e ON e.usuario = u
+        JOIN e.audiencia a
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND (:userId IS NULL OR u.sapiensId = :userId)
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        GROUP BY s.nome
+        ORDER BY COUNT(DISTINCT a) DESC
+        """)
+    List<SetorRelatorioDTO> gerarRelatorioSetores(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
+            @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT new br.gov.agu.pace.relatorio.SubnucleoRelatorioDTO(
+            CAST(a.subnucleo AS string),
+            COUNT(DISTINCT a)
+        )
+        FROM AudienciaEntity a
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND a.subnucleo IS NOT NULL
+        AND EXISTS (
+            SELECT e FROM EscalaEntity e 
+            WHERE e.audiencia = a
+            AND (:userId IS NULL OR e.usuario.sapiensId = :userId)
+        )
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        GROUP BY a.subnucleo
+        ORDER BY COUNT(DISTINCT a) DESC
+        """)
+    List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleos(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("userId") Long userId,
