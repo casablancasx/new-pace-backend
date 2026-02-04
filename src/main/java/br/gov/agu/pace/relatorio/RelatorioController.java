@@ -3,6 +3,7 @@ package br.gov.agu.pace.relatorio;
 import br.gov.agu.pace.domain.enums.ClasseJudicial;
 import br.gov.agu.pace.domain.enums.Subnucleo;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
+import br.gov.agu.pace.domain.enums.ViewRelatorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -53,11 +54,12 @@ public class RelatorioController {
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Long orgaoJulgadorId,
             @RequestParam(required = false) TipoContestacao tipoContestacao,
-            @RequestParam(required = false)Subnucleo subnucleo,
-            @RequestParam(required = false) ClasseJudicial classeJudicial
+            @RequestParam(required = false) Subnucleo subnucleo,
+            @RequestParam(required = false) ClasseJudicial classeJudicial,
+            @RequestParam(required = false, defaultValue = "ESCALA") ViewRelatorio view
     ){
 
-        List<ContestacaoRelatorioDTO> response = relatorioService.gerarRelatorioContestacao(dataInicio,dataFim,userId,orgaoJulgadorId,tipoContestacao,subnucleo,classeJudicial);
+        List<ContestacaoRelatorioDTO> response = relatorioService.gerarRelatorioContestacao(dataInicio,dataFim,userId,orgaoJulgadorId,tipoContestacao,subnucleo,classeJudicial,view);
         return ResponseEntity.ok(response);
     }
 
@@ -68,11 +70,12 @@ public class RelatorioController {
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) Long orgaoJulgadorId,
             @RequestParam(required = false) TipoContestacao tipoContestacao,
-            @RequestParam(required = false)Subnucleo subnucleo,
-            @RequestParam(required = false) ClasseJudicial classeJudicial
+            @RequestParam(required = false) Subnucleo subnucleo,
+            @RequestParam(required = false) ClasseJudicial classeJudicial,
+            @RequestParam(required = false, defaultValue = "ESCALA") ViewRelatorio view
     ){
         TotaisRelatorioDTO response = relatorioService.gerarRelatorioTotais(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial, view
         );
         return ResponseEntity.ok(response);
     }
@@ -85,10 +88,11 @@ public class RelatorioController {
             @RequestParam(required = false) Long orgaoJulgadorId,
             @RequestParam(required = false) TipoContestacao tipoContestacao,
             @RequestParam(required = false) Subnucleo subnucleo,
-            @RequestParam(required = false) ClasseJudicial classeJudicial
+            @RequestParam(required = false) ClasseJudicial classeJudicial,
+            @RequestParam(required = false, defaultValue = "ESCALA") ViewRelatorio view
     ){
         List<SetorRelatorioDTO> response = relatorioService.gerarRelatorioSetores(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial, view
         );
         return ResponseEntity.ok(response);
     }
@@ -101,10 +105,11 @@ public class RelatorioController {
             @RequestParam(required = false) Long orgaoJulgadorId,
             @RequestParam(required = false) TipoContestacao tipoContestacao,
             @RequestParam(required = false) Subnucleo subnucleo,
-            @RequestParam(required = false) ClasseJudicial classeJudicial
+            @RequestParam(required = false) ClasseJudicial classeJudicial,
+            @RequestParam(required = false, defaultValue = "ESCALA") ViewRelatorio view
     ){
         List<SubnucleoRelatorioDTO> response = relatorioService.gerarRelatorioSubnucleos(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial, view
         );
         return ResponseEntity.ok(response);
     }

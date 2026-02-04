@@ -4,6 +4,7 @@ import br.gov.agu.pace.domain.audiencia.repository.AudienciaRepository;
 import br.gov.agu.pace.domain.enums.ClasseJudicial;
 import br.gov.agu.pace.domain.enums.Subnucleo;
 import br.gov.agu.pace.domain.enums.TipoContestacao;
+import br.gov.agu.pace.domain.enums.ViewRelatorio;
 import br.gov.agu.pace.domain.escala.EscalaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,10 +33,18 @@ public class RelatorioService {
 
     }
 
-    public List<ContestacaoRelatorioDTO> gerarRelatorioContestacao(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial) {
-        List<ContestacaoRelatorioDTO> resultado = audienciaRepository.gerarRelatorioContestacao(
-                dataInicio,dataFim,userId,orgaoJulgadorId,tipoContestacao,subnucleo,classeJudicial
-        );
+    public List<ContestacaoRelatorioDTO> gerarRelatorioContestacao(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial, ViewRelatorio view) {
+        List<ContestacaoRelatorioDTO> resultado;
+        
+        if (view == ViewRelatorio.AUDIENCIA) {
+            resultado = audienciaRepository.gerarRelatorioContestacaoAudiencia(
+                    dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        } else {
+            resultado = audienciaRepository.gerarRelatorioContestacaoEscala(
+                    dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        }
         
         // Criar mapa com resultados obtidos
         Map<String, Long> mapaResultados = resultado.stream()
@@ -52,25 +61,50 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
-    public TotaisRelatorioDTO gerarRelatorioTotais(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial) {
-        Long totalAudiencias = audienciaRepository.contarTotalAudiencias(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
-        );
-        Long totalPautas = audienciaRepository.contarTotalPautas(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
-        );
+    public TotaisRelatorioDTO gerarRelatorioTotais(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial, ViewRelatorio view) {
+        Long totalAudiencias;
+        Long totalPautas;
+        
+        if (view == ViewRelatorio.AUDIENCIA) {
+            totalAudiencias = audienciaRepository.contarTotalAudienciasAudiencia(
+                    dataInicio, dataFim, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+            totalPautas = audienciaRepository.contarTotalPautasAudiencia(
+                    dataInicio, dataFim, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        } else {
+            totalAudiencias = audienciaRepository.contarTotalAudienciasEscala(
+                    dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+            totalPautas = audienciaRepository.contarTotalPautasEscala(
+                    dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        }
+        
         return new TotaisRelatorioDTO(totalAudiencias, totalPautas);
     }
 
-    public List<SetorRelatorioDTO> gerarRelatorioSetores(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial) {
-        return audienciaRepository.gerarRelatorioSetores(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
-        );
+    public List<SetorRelatorioDTO> gerarRelatorioSetores(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial, ViewRelatorio view) {
+        if (view == ViewRelatorio.AUDIENCIA) {
+            return audienciaRepository.gerarRelatorioSetoresAudiencia(
+                    dataInicio, dataFim, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        } else {
+            return audienciaRepository.gerarRelatorioSetoresEscala(
+                    dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        }
     }
 
-    public List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleos(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial) {
-        return audienciaRepository.gerarRelatorioSubnucleos(
-                dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
-        );
+    public List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleos(LocalDate dataInicio, LocalDate dataFim, Long userId, Long orgaoJulgadorId, TipoContestacao tipoContestacao, Subnucleo subnucleo, ClasseJudicial classeJudicial, ViewRelatorio view) {
+        if (view == ViewRelatorio.AUDIENCIA) {
+            return audienciaRepository.gerarRelatorioSubnucleosAudiencia(
+                    dataInicio, dataFim, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        } else {
+            return audienciaRepository.gerarRelatorioSubnucleosEscala(
+                    dataInicio, dataFim, userId, orgaoJulgadorId, tipoContestacao, subnucleo, classeJudicial
+            );
+        }
     }
 }

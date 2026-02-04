@@ -54,7 +54,33 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
         AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
         GROUP BY a.tipoContestacao
         """)
-    List<ContestacaoRelatorioDTO> gerarRelatorioContestacao(
+    List<ContestacaoRelatorioDTO> gerarRelatorioContestacaoEscala(
+
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
+            @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT new br.gov.agu.pace.relatorio.ContestacaoRelatorioDTO(
+            a.tipoContestacao,
+            COUNT(a)
+        )
+        FROM AudienciaEntity a
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        GROUP BY a.tipoContestacao
+        """)
+    List<ContestacaoRelatorioDTO> gerarRelatorioContestacaoAudiencia(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("userId") Long userId,
@@ -80,10 +106,30 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
         AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
         AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
         """)
-    Long contarTotalAudiencias(
+    Long contarTotalAudienciasEscala(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT COUNT(a)
+        FROM AudienciaEntity a
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        """)
+    Long contarTotalAudienciasAudiencia(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
             @Param("orgaoJulgadorId") Long orgaoJulgadorId,
             @Param("tipoContestacao") TipoContestacao tipoContestacao,
             @Param("subnucleo") Subnucleo subnucleo,
@@ -106,10 +152,30 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
         AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
         AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
         """)
-    Long contarTotalPautas(
+    Long contarTotalPautasEscala(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT COUNT(DISTINCT p)
+        FROM AudienciaEntity a
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        """)
+    Long contarTotalPautasAudiencia(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
             @Param("orgaoJulgadorId") Long orgaoJulgadorId,
             @Param("tipoContestacao") TipoContestacao tipoContestacao,
             @Param("subnucleo") Subnucleo subnucleo,
@@ -136,10 +202,37 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
         GROUP BY s.nome
         ORDER BY COUNT(DISTINCT a) DESC
         """)
-    List<SetorRelatorioDTO> gerarRelatorioSetores(
+    List<SetorRelatorioDTO> gerarRelatorioSetoresEscala(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT new br.gov.agu.pace.relatorio.SetorRelatorioDTO(
+            s.nome,
+            COUNT(DISTINCT a)
+        )
+        FROM SetorEntity s
+        JOIN s.usuarios u
+        JOIN AudienciaEntity a ON a.pauta IS NOT NULL
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        GROUP BY s.nome
+        ORDER BY COUNT(DISTINCT a) DESC
+        """)
+    List<SetorRelatorioDTO> gerarRelatorioSetoresAudiencia(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
             @Param("orgaoJulgadorId") Long orgaoJulgadorId,
             @Param("tipoContestacao") TipoContestacao tipoContestacao,
             @Param("subnucleo") Subnucleo subnucleo,
@@ -168,10 +261,36 @@ public interface AudienciaRepository extends JpaRepository<AudienciaEntity, Long
         GROUP BY a.subnucleo
         ORDER BY COUNT(DISTINCT a) DESC
         """)
-    List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleos(
+    List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleosEscala(
             @Param("dataInicio") LocalDate dataInicio,
             @Param("dataFim") LocalDate dataFim,
             @Param("userId") Long userId,
+            @Param("orgaoJulgadorId") Long orgaoJulgadorId,
+            @Param("tipoContestacao") TipoContestacao tipoContestacao,
+            @Param("subnucleo") Subnucleo subnucleo,
+            @Param("classeJudicial") ClasseJudicial classeJudicial
+    );
+
+    @Query("""
+        SELECT new br.gov.agu.pace.relatorio.SubnucleoRelatorioDTO(
+            CAST(a.subnucleo AS string),
+            COUNT(DISTINCT a)
+        )
+        FROM AudienciaEntity a
+        JOIN a.pauta p
+        LEFT JOIN p.orgaoJulgador oj
+        WHERE p.data BETWEEN :dataInicio AND :dataFim
+        AND a.subnucleo IS NOT NULL
+        AND (:orgaoJulgadorId IS NULL OR oj.orgaoJulgadorId = :orgaoJulgadorId)
+        AND (:tipoContestacao IS NULL OR a.tipoContestacao = :tipoContestacao)
+        AND (:subnucleo IS NULL OR a.subnucleo = :subnucleo)
+        AND (:classeJudicial IS NULL OR a.classeJudicial = :classeJudicial)
+        GROUP BY a.subnucleo
+        ORDER BY COUNT(DISTINCT a) DESC
+        """)
+    List<SubnucleoRelatorioDTO> gerarRelatorioSubnucleosAudiencia(
+            @Param("dataInicio") LocalDate dataInicio,
+            @Param("dataFim") LocalDate dataFim,
             @Param("orgaoJulgadorId") Long orgaoJulgadorId,
             @Param("tipoContestacao") TipoContestacao tipoContestacao,
             @Param("subnucleo") Subnucleo subnucleo,
