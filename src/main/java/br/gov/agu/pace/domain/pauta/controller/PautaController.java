@@ -26,15 +26,16 @@ public class PautaController {
             @RequestParam(defaultValue = "criadoEm") String orderBy,
             @RequestParam(defaultValue = "DESC") Sort.Direction sort,
             @RequestParam(required = false) Long orgaoJulgadorId,
+            @RequestParam(required = false) Long userId,
             @RequestParam(required = false)Uf uf
             ) {
-        Page<PautaEntity> pautas = pautaService.listarTodas(page,size,orderBy, sort, orgaoJulgadorId, uf);
+        Page<PautaEntity> pautas = pautaService.listarTodas(page,size,orderBy, sort, orgaoJulgadorId,userId, uf);
         return ResponseEntity.ok(pautas);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PautaDTO> buscarPautaPorId(@PathVariable Long id) {
-        PautaDTO pauta = pautaService.buscarPautaPorId(id);
+    public ResponseEntity<PautaDTO> buscarPautaPorId(@PathVariable Long id, @RequestHeader("Authorization") String token) {
+        PautaDTO pauta = pautaService.buscarPautaPorId(id, token);
         return ResponseEntity.ok(pauta);
     }
 }

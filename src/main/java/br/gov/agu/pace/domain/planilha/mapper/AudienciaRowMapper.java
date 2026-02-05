@@ -1,5 +1,6 @@
 package br.gov.agu.pace.domain.planilha.mapper;
 
+import br.gov.agu.pace.domain.enums.ClasseJudicial;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.enums.Uf;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
@@ -35,6 +36,7 @@ public class AudienciaRowMapper {
         audienciaDTO.setPoloAtivo(getPoloAtivoFromRow(row));
         audienciaDTO.setSala(getSalaFromRow(row));
         audienciaDTO.setTurno(getTurno(audienciaDTO.getHora()));
+        audienciaDTO.setClasseJudicial(getClasseJudicialFromRow(row));
         return audienciaDTO;
     }
 
@@ -59,6 +61,15 @@ public class AudienciaRowMapper {
         return row.getCell(1).getStringCellValue();
     }
 
+    private ClasseJudicial getClasseJudicialFromRow(Row row) {
+        String classeJucialCelll = row.getCell(4).getStringCellValue();
+        classeJucialCelll = classeJucialCelll.toUpperCase().trim();
+        boolean isJudicial = classeJucialCelll.contains("JUIZADO ESPECIAL");
+
+        if (isJudicial) return ClasseJudicial.JEF;
+        else return ClasseJudicial.COMUM;
+    }
+
     private String getOrgaoJulgadorFromRow(Row row) {
         return row.getCell(2).getStringCellValue();
     }
@@ -68,7 +79,26 @@ public class AudienciaRowMapper {
     }
 
     private String getPoloAtivoFromRow(Row row) {
-        return row.getCell(3).getStringCellValue().replace(POLO_PASSIVO, "");
+        String texto = row.getCell(3).getStringCellValue();
+        
+        // Caso 1: Formato "NOME - CPF: xxx (AUTOR) X INSS..."
+        if (texto.contains(" - CPF:")) {
+            return texto.split(" - CPF:")[0].trim();
+        }
+        
+        // Caso 2: Formato com quebra de linha "NOME\nINSS..."
+        if (texto.contains("\n")) {
+            String[] linhas = texto.split("\n");
+            for (String linha : linhas) {
+                linha = linha.trim();
+                if (!linha.isEmpty() && !linha.contains(POLO_PASSIVO)) {
+                    return linha;
+                }
+            }
+        }
+        
+        // Fallback: remove o INSS e retorna o que sobrar
+        return texto.replace(POLO_PASSIVO, "").trim();
     }
 
     private List<String> getAdvogadosFromRow(Row row) {

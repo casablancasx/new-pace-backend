@@ -1,11 +1,10 @@
 package br.gov.agu.pace.domain.pauta.entity;
 
 import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
-import br.gov.agu.pace.domain.enums.StatusEscalaPauta;
 import br.gov.agu.pace.domain.enums.Turno;
 import br.gov.agu.pace.domain.orgaoJulgador.OrgaoJulgadorEntity;
 import br.gov.agu.pace.domain.sala.SalaEntity;
-import br.gov.agu.pace.escala.EscalaEntity;
+import br.gov.agu.pace.domain.escala.EscalaEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,11 +15,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Set;
-
-import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.ERRO;
-import static br.gov.agu.pace.domain.enums.StatusCadastroTarefa.SUCESSO;
 
 @Entity
 @Table(name = "tb_pautas")
@@ -48,14 +43,14 @@ public class PautaEntity {
     @Enumerated(EnumType.STRING)
     private Turno turno;
 
+    private boolean isEscaladaAvaliador;
+
+    private boolean isEscaladaPautista;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AudienciaEntity> audiencias;
-
-    @ManyToOne
-    @JoinColumn(name = "escala_id")
-    private EscalaEntity escala;
 
 
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
@@ -70,18 +65,6 @@ public class PautaEntity {
     }
 
 
-    @JsonIgnore
-    public Long getTotalAudienciasCadastradasComSucesso(){
-        return audiencias.stream()
-                .filter(a -> SUCESSO.equals(a.getStatusCadastroTarefaAvaliador()))
-                .count();
-    }
 
-    @JsonIgnore
-    public Long getTotalAudienciasCadastradasComErro(){
-        return audiencias.stream()
-                .filter(a -> ERRO.equals(a.getStatusCadastroTarefaAvaliador()))
-                .count();
-    }
 
 }

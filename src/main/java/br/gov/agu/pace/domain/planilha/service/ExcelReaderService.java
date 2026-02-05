@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Service
@@ -23,9 +24,9 @@ public class ExcelReaderService {
     private final AudienciaRowMapper audienciaRowMapper;
 
 
-    public Set<AudienciaDTO> importarPlanilha(MultipartFile file) throws IOException, Exception {
+    public Set<AudienciaDTO> importarPlanilha(MultipartFile file) throws Exception {
 
-        Set<AudienciaDTO> audiencias = new HashSet<>();
+        Set<AudienciaDTO> audiencias = new LinkedHashSet<>();
         try (InputStream inputStream = file.getInputStream()){
 
             Workbook workbook = WorkbookFactory.create(inputStream);

@@ -3,6 +3,7 @@ package br.gov.agu.pace.auth.service;
 import br.gov.agu.pace.auth.dtos.LoginRequestDTO;
 import br.gov.agu.pace.auth.dtos.LoginResponseDTO;
 import br.gov.agu.pace.auth.dtos.UserFromTokenDTO;
+import br.gov.agu.pace.domain.user.UserRepository;
 import br.gov.agu.pace.integrations.client.SapiensClient;
 import br.gov.agu.pace.integrations.dtos.LoginSapiensApiResponse;
 import br.gov.agu.pace.domain.user.UserEntity;
@@ -21,9 +22,7 @@ public class AuthService {
     public LoginResponseDTO login(LoginRequestDTO data){
         LoginSapiensApiResponse loginResponseSapiensAPI = sapiensClient.getTokenSuperSapiens(data);
         UserFromTokenDTO userFromToken = tokenService.getUserFromToken(loginResponseSapiensAPI.getToken());
-
-        //Buscar um usuario existente ou criar um novo com base nos dados do token
-        UserEntity user = userService.buscarOuCriarUsuario(userFromToken);
+        UserEntity user = userService.buscarUsuarioPorSapiensId(userFromToken.getSapiensId());
         return new LoginResponseDTO(
                 loginResponseSapiensAPI.getExp(),
                 loginResponseSapiensAPI.isPasswordExpired(),

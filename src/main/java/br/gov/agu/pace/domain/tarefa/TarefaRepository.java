@@ -1,8 +1,8 @@
-package br.gov.agu.pace.domain.pautista;
+package br.gov.agu.pace.domain.tarefa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PautistaRepository extends JpaRepository<PautistaEntity, Long> {
+public interface TarefaRepository extends JpaRepository<TarefaEntity, Long> {
 }

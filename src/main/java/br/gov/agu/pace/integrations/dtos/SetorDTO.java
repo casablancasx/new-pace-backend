@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SetorDTO {
 
-    private Long setorId;
-    private String nomeSetor;
-    private Long unidadeId;
-    private String nomeUnidade;
+    private Long id;
+    private String nome;
+    private UnidadeDTO unidade;
 }

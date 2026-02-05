@@ -1,9 +1,9 @@
-package br.gov.agu.pace.escala;
+package br.gov.agu.pace.domain.escala;
 
-import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;
-import br.gov.agu.pace.domain.enums.TipoContestacao;
+import br.gov.agu.pace.domain.audiencia.entity.AudienciaEntity;
+import br.gov.agu.pace.domain.enums.TipoEscala;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
-import br.gov.agu.pace.domain.pautista.PautistaEntity;
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import br.gov.agu.pace.domain.user.UserEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "tb_escalas")
@@ -29,23 +27,23 @@ public class EscalaEntity {
     @Column(name = "escala_id")
     private Long escalaId;
 
-    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.systemDefault());
+    private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
     @ManyToOne
     @JoinColumn(name = "criador_id")
     private UserEntity criador;
 
-    @ElementCollection
-    @CollectionTable(name = "tb_escala_tipos_contestacao_selecionados", joinColumns = @JoinColumn(name = "escala_id"))
-    private Set<TipoContestacao> tiposSelecionados;
-
-    @OneToMany(mappedBy = "escala")
-    private Set<PautaEntity> pautas;
+    @ManyToOne
+    @JoinColumn(name = "audiencia_id")
+    private AudienciaEntity audiencia;
 
     @ManyToOne
-    private PautistaEntity pautista;
+    private UserEntity usuario;
 
-    @ManyToOne
-    private AvaliadorEntity avaliador;
+    @Enumerated(EnumType.STRING)
+    private TipoEscala tipo;
+
+    @OneToOne(mappedBy = "escala", optional = false)
+    private TarefaEntity tarefa;
 
 }

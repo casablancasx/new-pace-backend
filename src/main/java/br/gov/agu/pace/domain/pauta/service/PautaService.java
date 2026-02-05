@@ -19,7 +19,10 @@ import br.gov.agu.pace.domain.sala.SalaEntity;
 import br.gov.agu.pace.domain.sala.SalaService;
 import br.gov.agu.pace.domain.uf.UfEntity;
 import br.gov.agu.pace.domain.uf.UfService;
+import br.gov.agu.pace.domain.user.UserEntity;
+import br.gov.agu.pace.domain.user.UserService;
 import br.gov.agu.pace.domain.planilha.dtos.AudienciaDTO;
+import br.gov.agu.pace.auth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -48,6 +51,8 @@ public class PautaService {
     private final OrgaoJulgadorService orgaoJulgadorService;
     private final AssuntoService assuntoService;
     private final AdvogadoService advogadoService;
+    private final TokenService tokenService;
+    private final UserService userService;
 
     public Map<PautaDTO, List<AudienciaDTO>> agruparAudienciasPorPauta(Set<AudienciaDTO> audiencias) {
         return audiencias.stream()
@@ -174,15 +179,19 @@ public class PautaService {
         return alterada;
     }
 
-    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId, Uf uf) {
+    @Transactional(readOnly = true)
+    public Page<PautaEntity> listarTodas(int page, int size, String orderBy, Sort.Direction sort, Long orgaoJulgadorId,Long userId, Uf uf) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort, orderBy));
-        Page<PautaEntity> pautasPaginadas = pautaRepository.listarPautas(orgaoJulgadorId,uf,pageable);
+        Page<PautaEntity> pautasPaginadas = pautaRepository.listarPautas(orgaoJulgadorId,userId,uf,pageable);
         return pautasPaginadas;
     }
 
-    public PautaDTO buscarPautaPorId(Long id) {
+
+    @Transactional(readOnly = true)
+    public PautaDTO buscarPautaPorId(Long id, String token) {
         PautaEntity pauta = pautaRepository.buscarPorId(id);
-        var response = pautaMapper.toResponseDto(pauta);
+        UserEntity usuarioSolicitante = userService.buscarUsuarioPorSapiensId(tokenService.getSapiensIdFromToken(token));
+        var response = pautaMapper.toResponseDto(pauta, usuarioSolicitante);
 
         if (pauta.isPossuiNovaAudiencia()){
             pauta.getAudiencias().stream()

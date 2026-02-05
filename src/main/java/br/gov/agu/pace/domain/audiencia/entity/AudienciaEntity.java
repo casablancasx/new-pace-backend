@@ -2,12 +2,10 @@ package br.gov.agu.pace.domain.audiencia.entity;
 
 import br.gov.agu.pace.domain.advogado.AdvogadoEntity;
 import br.gov.agu.pace.domain.assunto.AssuntoEntity;
-import br.gov.agu.pace.domain.avaliador.AvaliadorEntity;
-import br.gov.agu.pace.domain.enums.RespostaAnaliseAvaliador;
-import br.gov.agu.pace.domain.enums.StatusCadastroTarefa;
-import br.gov.agu.pace.domain.enums.TipoContestacao;
+import br.gov.agu.pace.domain.enums.*;
+import br.gov.agu.pace.domain.escala.EscalaEntity;
 import br.gov.agu.pace.domain.pauta.entity.PautaEntity;
-import br.gov.agu.pace.domain.pautista.PautistaEntity;
+import br.gov.agu.pace.domain.tarefa.TarefaEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +33,7 @@ public class AudienciaEntity {
 
     private String numeroProcesso;
 
+    @Column(name = "nome_parte", length = 500)
     private String nomeParte;
 
     @JsonIgnore
@@ -58,11 +57,6 @@ public class AudienciaEntity {
 
     private String observacao;
 
-    @Enumerated(EnumType.STRING)
-    private StatusCadastroTarefa statusCadastroTarefaAvaliador;
-
-    @Enumerated(EnumType.STRING)
-    private StatusCadastroTarefa statusCadastroTarefaPautista;
 
     @ManyToOne
     @JoinColumn(name = "assunto_id")
@@ -75,10 +69,24 @@ public class AudienciaEntity {
     //Flag para identificar se houve adicao de uma nova audiencia em uma pauta existente
     private boolean novaAudiencia;
 
+    private boolean isEscaladaAvaliador;
+
+    private boolean isEscaladaPautista;
+
     private LocalDateTime criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
 
     @Column(name = "processo_id")
     private Long processoId;
+
+    @Enumerated(EnumType.STRING)
+    private ClasseJudicial classeJudicial;
+
+    @Enumerated(EnumType.STRING)
+    private Subnucleo subnucleo;
+
+
+    @OneToMany(mappedBy = "audiencia", cascade = CascadeType.ALL)
+    private List<EscalaEntity> escalas;
 
     public List<String> getAdvogados(){
         return advogados.stream().map(AdvogadoEntity::getNome).toList();

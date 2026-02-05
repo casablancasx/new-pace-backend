@@ -37,16 +37,27 @@ public class TokenService {
                 .get();
     }
 
+    public Long getSapiensIdFromToken(String token){
+
+        if (token.startsWith("Bearer ")){
+            token = token.replace("Bearer ", "");
+        }
+
+        return getUserFromToken(token).getSapiensId();
+    }
+
     public String renovarTokenSeExpirado(String token) {
         DecodedJWT jwt = JWT.decode(token);
 
         long expMillis = jwt.getExpiresAt().getTime();
         long agora = System.currentTimeMillis();
 
-        // 3 minutos antes (3 * 60 * 1000 = 180000)
-        long janelaRenovacao = 3 * 60 * 1000;
+        // 10 minutos antes (15 * 60 * 1000)
+        long janelaRenovacao = 15 * 60 * 1000;
 
+        // Se (Expiração - 10min) for menor ou igual ao tempo agora, renova.
         if (expMillis - janelaRenovacao <= agora) {
+            System.out.println("RENOVANDO TOKEN");
             return sapiensClient.refreshToken(token);
         }
 

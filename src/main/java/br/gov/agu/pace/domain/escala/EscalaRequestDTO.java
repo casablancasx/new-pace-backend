@@ -1,4 +1,4 @@
-package br.gov.agu.pace.escala;
+package br.gov.agu.pace.domain.escala;
 
 import br.gov.agu.pace.domain.enums.TipoContestacao;
 import br.gov.agu.pace.domain.enums.Uf;
@@ -33,6 +33,10 @@ public class EscalaRequestDTO {
     private List<Long> avaliadorIds;
 
     private List<Long> pautistaIds;
+
+    private boolean distribuicaoManualSetores;
+
+    private Long setorDestinoId;
 
 
 }

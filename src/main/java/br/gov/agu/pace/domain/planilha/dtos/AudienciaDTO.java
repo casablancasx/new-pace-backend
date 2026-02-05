@@ -1,8 +1,6 @@
 package br.gov.agu.pace.domain.planilha.dtos;
 
-import br.gov.agu.pace.domain.enums.TipoContestacao;
-import br.gov.agu.pace.domain.enums.Turno;
-import br.gov.agu.pace.domain.enums.Uf;
+import br.gov.agu.pace.domain.enums.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -44,5 +42,9 @@ public class AudienciaDTO {
     private TipoContestacao tipoContestacao;
 
     private Long processoId;
+
+    private ClasseJudicial classeJudicial;
+
+    private Subnucleo subnucleo;
 
 }

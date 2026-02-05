@@ -1,6 +1,6 @@
 package br.gov.agu.pace.domain.setor;
 
-import br.gov.agu.pace.integrations.dtos.SetorDTO;
+import br.gov.agu.pace.domain.unidade.UnidadeEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +11,10 @@ public class SetorService {
     private final SetorRepository setorRepository;
 
 
-    public SetorEntity buscarOuCriarSetorPorId(SetorDTO setorDTO){
-
-        return setorRepository.findById(setorDTO.getSetorId()).orElseGet(
-                () -> criarNovoSetor(setorDTO.getSetorId(), setorDTO.getNomeSetor())
-        );
+    public SetorEntity salvarSetor(SetorEntity setor){
+        return setorRepository.save(setor);
     }
 
 
-    private SetorEntity criarNovoSetor(Long setorId, String nome){
-        return setorRepository.save(new SetorEntity(setorId,nome));
-    }
+
 }

@@ -27,12 +27,18 @@ public class ContestacaoService {
 
 
     public AudienciaDTO adicionarTipoContestacaoEProcessoId(AudienciaDTO audienciaDTO, String token) {
-        Long processoId = sapiensClient.getProcessoIdPorNumeroProcosso(audienciaDTO.getNumeroProcesso(), token);
-        audienciaDTO.setProcessoId(processoId);
         try{
+            Long processoId = sapiensClient.getProcessoIdPorNumeroProcosso(audienciaDTO.getNumeroProcesso(), token);
+            audienciaDTO.setProcessoId(processoId);
+            
+            // Validar se processoId foi encontrado antes de tentar obter conteúdo
+            if (processoId == null) {
+                audienciaDTO.setTipoContestacao(SEM_CONTESTACAO);
+                return audienciaDTO;
+            }
+            
             String conteudoContestacao = obterConteudoContestacaoPorProcessoId(processoId, token);
             TipoContestacao tipoContestacao = extrairTipoContestacao(conteudoContestacao);
-            System.out.println(audienciaDTO.getNumeroProcesso() + " - " + tipoContestacao);
             audienciaDTO.setTipoContestacao(tipoContestacao);
             return audienciaDTO;
         }catch (Exception e){
